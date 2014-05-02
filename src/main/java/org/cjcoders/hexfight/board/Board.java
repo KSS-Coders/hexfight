@@ -57,10 +57,7 @@ public class Board{
 
 
 
-    // TODO Return generated off screen image
-    public Image getOffScreen() {
-        return null;
-    }
+
 
     /**
      * Perform "Clicked" action on tile indicated by xy coordinates
@@ -70,6 +67,7 @@ public class Board{
      * @return Boolean value indicates if off screen should be reloaded
      */
     public boolean tileClicked(Point gridXY){
+        System.out.println("Tile clicked : "+ gridXY);
         clicked[gridXY.x][gridXY.y] = !clicked[gridXY.x][gridXY.y];
         return true;
     }

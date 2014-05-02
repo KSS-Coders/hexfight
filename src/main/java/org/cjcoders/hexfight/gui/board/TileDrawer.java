@@ -41,6 +41,6 @@ public class TileDrawer {
         int x = settings.getxPad() + gridXY.x * settings.getDx();
         int y = gridXY.y * settings.getDy() * 2;
         if(gridXY.x % 2 == 1) y += settings.getDy();
-        return new Point(x - settings.getOffset().x, y - settings.getOffset().y);
+        return new Point(x, y);
     }
 }

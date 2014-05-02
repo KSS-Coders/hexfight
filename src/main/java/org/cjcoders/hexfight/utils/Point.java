@@ -13,4 +13,6 @@ public class Point {
     public String toString(){
         return "["+x+", "+y+"]";
     }
+    public Point setX(int x){ return new Point(x, y); }
+    public Point setY(int y){ return new Point(x, y); }
 }

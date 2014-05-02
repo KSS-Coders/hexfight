@@ -33,12 +33,13 @@ public class BoardPanel extends JPanel {
     private Board board;
     private final BoardDrawer boardDrawer;
     private final TilesSettings tilesSettings;
+    /** Offset of the upper left corner of the board from off screen upper left corner. */
+    private Point offset = new Point(0, 0);
 
     public BoardPanel() {
-        this.tilesSettings = new TilesSettings(DEFAULT_SIDE_SIZE, new Point(0, 0));
+        this.tilesSettings = new TilesSettings(DEFAULT_SIDE_SIZE);
         BoardMouseListener ml = new BoardMouseListener();
         boardDrawer = new BoardDrawer(tilesSettings);
-        boardDrawer.setBoard(board);
         addMouseListener(ml);
         addMouseMotionListener(ml);
         addMouseWheelListener(ml);
@@ -50,14 +51,15 @@ public class BoardPanel extends JPanel {
     /** Paint off screen image of board. */
     @Override
     public void paintComponent(final Graphics g){
-        //Image boardOffScreen = board.getOffScreen();
-        //g.drawImage(boardOffScreen, 0, 0, BGCOLOR, null);
-        boardDrawer.paintBoard(g, new DrawMeImpl(g));
+        super.paintComponent(g);
+        setBackground(BGCOLOR);
+        Image boardOffScreen = boardDrawer.getOffScreen();
+        g.drawImage(boardOffScreen, offset.x, offset.y, BGCOLOR, null);
     }
     private Point panelToGridXY(Point panelXY){
-        int x = (panelXY.x + tilesSettings.getOffset().x - tilesSettings.getxPad()) / tilesSettings.getDx();
-        int y = (panelXY.y + tilesSettings.getOffset().y) / (2 * tilesSettings.getDy());
-        if(x % 2 == 1) y = (panelXY.y + tilesSettings.getOffset().y - tilesSettings.getDy()) / (2 * tilesSettings.getDy());
+        int x = (panelXY.x - offset.x - tilesSettings.getxPad()) / tilesSettings.getDx();
+        int y = (panelXY.y - offset.y) / (2 * tilesSettings.getDy());
+        if(x % 2 == 1) y = (panelXY.y - offset.y - tilesSettings.getDy()) / (2 * tilesSettings.getDy());
         return new Point(x, y);
     }
 
@@ -91,6 +93,7 @@ public class BoardPanel extends JPanel {
         private boolean dragging;
         /** Point where dragging was started. */
         private Point draggingPoint;
+
 
         /*============================================
             IMPLEMENTED LISTENERS METHODS
@@ -138,7 +141,9 @@ public class BoardPanel extends JPanel {
             if(dragging && inArea){
                 int x = e.getX();
                 int y = e.getY();
-                tilesSettings.updateOffset(draggingPoint.x - x, draggingPoint.y - y);
+                int xOffset = x - draggingPoint.x;
+                int yOffset = y - draggingPoint.y;
+                updateOffset(xOffset, yOffset);
                 draggingPoint = new Point(x,y);
                 repaint();
             }
@@ -162,13 +167,35 @@ public class BoardPanel extends JPanel {
         public void mouseMoved(MouseEvent e) {}
     }
 
-    class DrawMeImpl implements DrawMe{
-        private Graphics g;
-        DrawMeImpl(Graphics g){ this.g = g; }
-        @Override
-        public void draw() {
-            setBackground(BGCOLOR);
-            BoardPanel.super.paintComponent(g);
-        }
+    public void setOffset(Point offset) {
+        if(fitsScreenVertically()) offset = offset.setX(this.offset.x);
+        else offset = applyMinOffsetX(applyMaxOffsetX(offset));
+        if(fitsScreenHorizontally()) offset = offset.setY(this.offset.y);
+        else offset = applyMaxOffsetY(applyMinOffsetY(offset));
+        this.offset = offset;
+    }
+    public void updateOffset(int xOffset, int yOffset){
+        setOffset(new Point(offset.x + xOffset, offset.y + yOffset));
+    }
+
+    private boolean fitsScreenVertically(){ return getWidth() > tilesSettings.calculateBoardWidth(board.getSize().width); }
+    private boolean fitsScreenHorizontally(){ return getHeight() > tilesSettings.calculateBoardHeight(board.getSize().height); }
+    private Point applyMinOffsetX(Point offset){
+        if(offset.x > 0) return offset.setX(0);
+        return offset;
+    }
+    private Point applyMaxOffsetX(Point offset){
+        int maxX = tilesSettings.calculateBoardWidth(board.getSize().width) - getWidth();
+        if(-offset.x > maxX) return offset.setX(-maxX);
+        return offset;
+    }
+    private Point applyMinOffsetY(Point offset){
+        if(offset.y > 0) return offset.setY(0);
+        return offset;
+    }
+    private Point applyMaxOffsetY(Point offset){
+        int maxY = tilesSettings.calculateBoardHeight(board.getSize().height) - getHeight();
+        if(-offset.y > maxY) return offset.setY(-maxY);
+        return offset;
     }
 }
