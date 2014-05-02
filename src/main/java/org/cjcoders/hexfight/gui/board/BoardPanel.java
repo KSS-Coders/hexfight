@@ -53,8 +53,12 @@ public class BoardPanel extends JPanel {
     public void paintComponent(final Graphics g){
         super.paintComponent(g);
         setBackground(BGCOLOR);
-        Image boardOffScreen = boardDrawer.getOffScreen();
-        g.drawImage(boardOffScreen, offset.x, offset.y, BGCOLOR, null);
+        Image boardOffScreen = boardDrawer.getOffScreen(
+                -offset.x,
+                -offset.y,
+                Math.min(getBoardWidth() - 1, getWidth()),
+                Math.min(getBoardHight() - 1, getHeight()));
+        g.drawImage(boardOffScreen, 0, 0, BGCOLOR, null);
     }
     private Point panelToGridXY(Point panelXY){
         int x = (panelXY.x - offset.x - tilesSettings.getxPad()) / tilesSettings.getDx();
@@ -62,6 +66,13 @@ public class BoardPanel extends JPanel {
         if(x % 2 == 1) y = (panelXY.y - offset.y - tilesSettings.getDy()) / (2 * tilesSettings.getDy());
         return new Point(x, y);
     }
+    private int getBoardWidth(){
+        return tilesSettings.calculateBoardWidth(board.getSize().width);
+    }
+    private int getBoardHight(){
+        return tilesSettings.calculateBoardHeight(board.getSize().height);
+    }
+
 
     /*=============================================
         GETTERS AND SETTERS

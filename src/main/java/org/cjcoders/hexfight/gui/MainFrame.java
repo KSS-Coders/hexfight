@@ -40,7 +40,7 @@ public class MainFrame extends JFrame{
     public MainFrame(){
         super("Hexfight");
         boardPanel = new BoardPanel();
-        boardPanel.setBoard(new Board(new Dimension(20,20)));
+        boardPanel.setBoard(new Board(new Dimension(200,200)));
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setLayout(new MigLayout("","30[]30","50[]50"));
         add(boardPanel,"push, grow, wrap");

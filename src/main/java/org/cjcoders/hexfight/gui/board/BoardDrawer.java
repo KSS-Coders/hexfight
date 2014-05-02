@@ -38,8 +38,8 @@ public class BoardDrawer implements ChangeListener{
     }
 
     // TODO Return generated off screen image
-    public Image getOffScreen() {
-        return offScreen;
+    public Image getOffScreen(int x, int y, int w, int h) {
+        return offScreen.getSubimage(x, y, w, h);
     }
 
     void generateOffScreen() {
