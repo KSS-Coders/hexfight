@@ -15,4 +15,10 @@ public class Point {
     }
     public Point setX(int x){ return new Point(x, y); }
     public Point setY(int y){ return new Point(x, y); }
+    public Point add(Point toAdd){
+        return new Point(x + toAdd.x, y + toAdd.y);
+    }
+    public Point negative(){
+        return new Point(-x, -y);
+    }
 }

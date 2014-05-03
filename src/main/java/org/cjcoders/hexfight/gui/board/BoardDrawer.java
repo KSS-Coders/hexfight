@@ -66,4 +66,8 @@ public class BoardDrawer implements ChangeListener{
     public void update(int changedValue) {
         if(changedValue == TilesSettings.SIDE_SIZE_CHANGED)generateOffScreen();
     }
+
+    public Point getOffScreenCenter(){
+        return new Point(getBoardWidth()/2, getBoardHeight()/2);
+    }
 }
