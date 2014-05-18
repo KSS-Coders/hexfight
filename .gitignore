@@ -1,3 +1,6 @@
 .*
+**/*.iws
+**/*.ipr
 build/
 out/
+
