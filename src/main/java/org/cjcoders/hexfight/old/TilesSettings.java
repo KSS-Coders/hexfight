@@ -1,6 +1,6 @@
-package org.cjcoders.hexfight.gui.board;
+package org.cjcoders.hexfight.old;
 
-import org.cjcoders.hexfight.utils.MathUtils;
+import org.cjcoders.hexfight.old.utils.MathUtils;
 
 import java.util.ArrayList;
 import java.util.List;

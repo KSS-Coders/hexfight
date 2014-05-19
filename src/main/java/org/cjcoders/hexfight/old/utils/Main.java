@@ -1,6 +1,6 @@
-package org.cjcoders.hexfight;
+package org.cjcoders.hexfight.old.utils;
 
-import org.cjcoders.hexfight.gui.MainFrame;
+import org.cjcoders.hexfight.old.MainFrame;
 
 import javax.swing.*;
 

@@ -1,4 +1,4 @@
-package org.cjcoders.hexfight.utils;
+package org.cjcoders.hexfight.old.utils;
 
 /**
 * Created by mrakr_000 on 27.04.14.

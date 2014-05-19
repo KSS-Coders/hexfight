@@ -1,7 +1,7 @@
 apply plugin: 'java'
 apply plugin: 'idea'
 
-sourceCompatibility = 1.5
+sourceCompatibility = 1.7
 version = '1.0'
 
 repositories {
@@ -11,5 +11,31 @@ repositories {
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.11'
     compile 'com.miglayout:miglayout:3.7.4'
+    compile 'org.lwjgl.lwjgl:lwjgl:2.9.1'
+    compile 'org.slick2d:slick2d-core:1.0.0'
+}
 
+compileJava.dependsOn "natives"
+
+platforms = ['windows', 'linux', 'osx']
+platforms.each { platform ->
+    task "${platform}Natives" {
+        outputDir = "$buildDir/natives/$platform"
+        inputs.files(configurations.compile)
+        outputs.dir(outputDir)
+        doLast {
+            copy {
+                def artifacts = configurations.compile.resolvedConfiguration.resolvedArtifacts
+                        .findAll { it.classifier == "natives-$platform" }
+                artifacts.each {
+                    from zipTree(it.file)
+                }
+                into outputDir
+            }
+        }
+    }
+}
+task natives {
+    description "Copies native libraries to an appropriate directory."
+    dependsOn platforms.collect { "${it}Natives" }.findAll { tasks[it] }
 }

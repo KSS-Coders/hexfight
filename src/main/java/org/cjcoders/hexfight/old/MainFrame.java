@@ -1,11 +1,9 @@
-package org.cjcoders.hexfight.gui;
+package org.cjcoders.hexfight.old;
 
 import net.miginfocom.swing.MigLayout;
 import org.cjcoders.hexfight.board.Board;
-import org.cjcoders.hexfight.gui.board.BoardPanel;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -39,7 +37,7 @@ public class MainFrame extends JFrame{
      ============================================*/
     public MainFrame(){
         super("Hexfight");
-        boardPanel = new BoardPanel();
+        boardPanel = new BoardPanel(new BoardDrawingAssistant(new HexShaper(50), new Board(100,100)));
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setLayout(new MigLayout("","30[]30","50[]50"));
         add(boardPanel,"push, grow, wrap");
@@ -53,7 +51,6 @@ public class MainFrame extends JFrame{
         add(switchFs);
         setFullScreen(fullScreen);
         setVisible(true);
-        boardPanel.setBoard(new Board(new Dimension(10,10)));
     }
 
     /*=============================================

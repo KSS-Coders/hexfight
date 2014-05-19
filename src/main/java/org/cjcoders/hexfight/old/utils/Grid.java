@@ -1,6 +1,4 @@
-package org.cjcoders.hexfight.utils;
-
-import java.lang.reflect.Array;
+package org.cjcoders.hexfight.old.utils;
 
 /**
  * Created by mrakr_000 on 30.04.14.

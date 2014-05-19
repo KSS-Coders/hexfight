@@ -1,10 +1,7 @@
 package org.cjcoders.hexfight.board;
 
-import org.cjcoders.hexfight.gui.board.BoardPanel;
-import org.cjcoders.hexfight.utils.*;
-import org.cjcoders.hexfight.utils.Point;
+import org.cjcoders.hexfight.old.utils.Point;
 
-import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 
@@ -45,7 +42,7 @@ public class Board{
     }
 
    /* private boolean shouldPrint(Point gridXY) {
-        org.cjcoders.hexfight.utils.Point panelXY = gridToPanelXY(gridXY);
+        org.cjcoders.hexfight.old.utils.Point panelXY = gridToPanelXY(gridXY);
         return inRange(panelXY.x - xPad) ||
                 inRange(panelXY.x + dx) ||
                 inRange(panelXY.y)||
@@ -73,9 +70,11 @@ public class Board{
     }
 
     public Tile getTile(int w, int h) {
-        if(clicked[w][h]){
+        return fakeTile(clicked[w][h]);
+    }
 
-
+    private Tile fakeTile(boolean clicked){
+        if(clicked){
             return new Tile() {
                 @Override
                 public Paint getFillImg() {
@@ -101,5 +100,17 @@ public class Board{
                 }
             };
         }
+    }
+
+    public void addTileChangeListener(TileChangedListener listener) {
+
+    }
+
+    public int getWidth() {
+        return size.width;
+    }
+
+    public int getHeight() {
+        return size.height;
     }
 }

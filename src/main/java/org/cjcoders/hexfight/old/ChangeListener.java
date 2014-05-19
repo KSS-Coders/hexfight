@@ -1,4 +1,4 @@
-package org.cjcoders.hexfight.gui.board;
+package org.cjcoders.hexfight.old;
 
 /**
  * Created by mrakr_000 on 02.05.14.
