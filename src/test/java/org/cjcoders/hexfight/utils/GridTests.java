@@ -1,5 +1,7 @@
 package org.cjcoders.hexfight.utils;
 import java.util.Iterator;
+
+import org.cjcoders.hexfight.old.utils.Grid;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import static org.junit.Assert.assertEquals;

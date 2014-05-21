@@ -13,6 +13,7 @@ dependencies {
     compile 'com.miglayout:miglayout:3.7.4'
     compile 'org.lwjgl.lwjgl:lwjgl:2.9.1'
     compile 'org.slick2d:slick2d-core:1.0.0'
+    compile 'log4j:log4j:1.2.17'
 }
 
 compileJava.dependsOn "natives"

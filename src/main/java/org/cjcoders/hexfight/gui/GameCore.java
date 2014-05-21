@@ -1,5 +1,7 @@
 package org.cjcoders.hexfight.gui;
 
+import org.apache.log4j.BasicConfigurator;
+import org.cjcoders.hexfight.Context;
 import org.cjcoders.hexfight.gui.states.GameIntroState;
 import org.cjcoders.hexfight.gui.states.KickState;
 import org.cjcoders.hexfight.gui.states.MainMenuState;
@@ -8,9 +10,10 @@ import org.cjcoders.hexfight.gui.utils.resources.Resources;
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.SlickException;
-import org.newdawn.slick.gui.MouseOverArea;
 import org.newdawn.slick.state.StateBasedGame;
+import org.xml.sax.SAXException;
 
+import javax.xml.parsers.ParserConfigurationException;
 import java.awt.*;
 import java.io.IOException;
 
@@ -21,36 +24,46 @@ public class GameCore extends StateBasedGame{
 
     public static final String GAME_TITLE = "cubic";
 
+    private Context context;
+
     public GameCore(String title) {
         super(title);
+        context = new Context();
     }
 
-    public static void initResources(){
+    public void initGame(GameContainer container){
         try {
+            context.init(container);
             Resources.get().fonts.load("cubic", "fonts/cubic.ttf");
             Resources.get().fonts.load("forces-squared", "fonts/forces-squared.ttf");
-            Resources.get().images.load("menu-bg", "images/1920/menu-bg.jpg");
-            Resources.get().images.load("logo", "images/logo.png");
-            Resources.get().images.load("logo-mini", "images/logo-mini.png");
-            Resources.get().images.load("hex-border", "images/hex-border.png");
-            Resources.get().images.load("turn-bg", "images/themes/space/bg.jpg");
-            Resources.get().images.load("planet", "images/themes/space/tiles/planet4.png");
-            Resources.get().images.load("tiles", "images/themes/space/tiles.png");
-        } catch (IOException | FontFormatException | SlickException e) {
+        } catch (IOException | FontFormatException | SAXException | ParserConfigurationException | SlickException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    protected void preUpdateState(GameContainer container, int delta) throws SlickException {
+        super.preUpdateState(container, delta);
+        try {
+            context.update(container);
+        } catch (FontFormatException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     @Override
     public void initStatesList(GameContainer container) throws SlickException {
-        initResources();
+        initGame(container);
         addState(new KickState());
-        addState(new GameIntroState());
-        addState(new MainMenuState());
+        addState(new GameIntroState(context));
+        addState(new MainMenuState(context));
         addState(new PrepareGameState());
     }
 
     public static void main(String args[]) throws SlickException {
+        BasicConfigurator.configure();
         AppGameContainer app = new AppGameContainer(new GameCore("Hexfight"));
         //app.setShowFPS(false);
         app.setDisplayMode(1920, 1080, true);

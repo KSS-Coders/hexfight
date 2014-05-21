@@ -1,5 +1,7 @@
 package org.cjcoders.hexfight.utils;
 
+import org.cjcoders.hexfight.old.utils.Point;
+
 /**
  * Created by Max on 2014-05-05.
  */

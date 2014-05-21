@@ -1,5 +1,7 @@
 package org.cjcoders.hexfight.gui.states;
 
+import org.cjcoders.hexfight.Context;
+import org.cjcoders.hexfight.gui.GameCore;
 import org.cjcoders.hexfight.gui.utils.resources.Resources;
 import org.newdawn.slick.*;
 import org.newdawn.slick.state.BasicGameState;
@@ -17,6 +19,11 @@ public class GameIntroState extends BasicGameState {
     private int timePassed;
     private Image logoMini;
     private Font forcesSquared18;
+    private Context context;
+
+    public GameIntroState(Context context) {
+        this.context = context;
+    }
 
     @Override
     public int getID() {
@@ -25,8 +32,8 @@ public class GameIntroState extends BasicGameState {
 
     @Override
     public void init(GameContainer container, StateBasedGame game) throws SlickException {
-        logoMini = Resources.get().images.get("logo-mini");
-        forcesSquared18 = Resources.get().fonts.get("forces-squared").getWithSize(18);
+        logoMini = context.resources().getImage("logo-mini");
+        forcesSquared18 = context.resources().getFont("forces-squared", 18);
     }
 
     @Override

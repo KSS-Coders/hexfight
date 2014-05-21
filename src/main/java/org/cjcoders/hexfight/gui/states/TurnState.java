@@ -23,27 +23,9 @@ import java.io.IOException;
 public class TurnState extends BasicGameState {
 
     private Player player;
-    private Board board;
-    private BoardDrawer boardDrawer;
 
-    private int side = 50;
-
-
-    float scale = 2;
-    public  Image bgImg;
-
-
-//    @Override
-//    public void mouseWheelMoved(int change){
-//        if(change > 0) {
-//            if (scale < 3) scale *= 1.1;
-//        }else if(scale > 1) scale /= 1.1;
-//        tileRed = (Polygon) tileRed.transform(Transform.createScaleTransform(scale, scale));
-//    }
-
-    public TurnState(Player player, Board board) {
+    public TurnState(Player player) {
         this.player = player;
-        this.board = board;
     }
 
     @Override
@@ -53,16 +35,10 @@ public class TurnState extends BasicGameState {
 
     @Override
     public void init(GameContainer container, StateBasedGame game) throws SlickException {
-        this.boardDrawer = new BoardDrawer(container, 1920, 1080, 50, 2, board);
-        boardDrawer.init();
-        bgImg = Resources.get().images.get("turn-bg");
     }
 
     @Override
     public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
-        g.drawImage(bgImg, 0, 0);
-        boardDrawer.render(container, g);
-        g.drawString(""+scale,1800,1000);
     }
 
     @Override
@@ -84,8 +60,4 @@ public class TurnState extends BasicGameState {
             }
         }
     }
-
-
-
-
 }

@@ -28,7 +28,7 @@ public class PrepareGameState extends BasicGameState{
         firstPlayer = new Player(1);
         bg = Resources.get().images.get("menu-bg");
         board = new Board(30, 30);
-        TurnState state = new TurnState(firstPlayer, board);
+        TurnState state = new TurnState(firstPlayer);
         state.init(container, game);
         game.addState(state);
     }

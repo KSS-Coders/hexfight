@@ -1,5 +1,6 @@
 package org.cjcoders.hexfight.utils;
 
+import org.cjcoders.hexfight.old.utils.Point;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;

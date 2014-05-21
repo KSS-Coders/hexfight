@@ -1,0 +1,19 @@
+<resources>
+    <images>
+        <theme name="space">
+            <tiles path="tiles.png" spriteWidth="72" spriteHeight="72"/>
+            <background path="bg.jpg">
+                <resolution w="1920" h="1080"/>
+            </background>
+        </theme>
+        <img name="menu-bg" path="menu-bg.jpg">
+            <resolution w="1920" h="1080"/>
+        </img>
+        <img name="logo" path="logo.png"/>
+        <img name="logo-mini" path="logo-mini.png"/>
+    </images>
+    <fonts>
+        <font name="cubic" path="cubic.ttf"/>
+        <font name="forces-squared" path="forces-squared.ttf"/>
+    </fonts>
+</resources>

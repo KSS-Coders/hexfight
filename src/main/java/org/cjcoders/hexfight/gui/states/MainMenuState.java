@@ -1,5 +1,6 @@
 package org.cjcoders.hexfight.gui.states;
 
+import org.cjcoders.hexfight.Context;
 import org.cjcoders.hexfight.gui.board.Hexagon;
 import org.cjcoders.hexfight.gui.utils.ButtonAction;
 import org.cjcoders.hexfight.gui.utils.TextButton;
@@ -27,14 +28,18 @@ public class MainMenuState extends BasicGameState {
      * @param title The title for the game
      */
 
-    Font cubic64b;
-    Font forcedSquared48;
-    TextButton startGame;
-    TextButton exit;
-    Image bg;
-    Image logo;
+    private Font cubic64b;
+    private Font forcedSquared48;
+    private TextButton startGame;
+    private TextButton exit;
+    private Image bg;
+    private Image logo;
 
-    public MainMenuState(){}
+    private Context context;
+
+    public MainMenuState(Context context){
+        this.context = context;
+    }
 
     @Override
     public int getID() {
@@ -43,12 +48,11 @@ public class MainMenuState extends BasicGameState {
 
     @Override
     public void init(final GameContainer container, final StateBasedGame game) throws SlickException {
-
         try {
-            cubic64b = Resources.get().fonts.get("cubic").withSize(64).withStyle(CustomizableFont.BOLD).get();
-            forcedSquared48 = Resources.get().fonts.get("forces-squared").getWithSize(48f);
-            bg =  Resources.get().images.get("menu-bg");
-            logo =  Resources.get().images.get("logo");
+            cubic64b = context.resources().getFont("cubic", 64, "b");
+            forcedSquared48 = context.resources().getFont("forces-squared", 48);
+            bg =  context.resources().getImage("menu-bg");
+            logo =  context.resources().getImage("logo");
         } catch (Exception e) {
             e.printStackTrace();
         }
