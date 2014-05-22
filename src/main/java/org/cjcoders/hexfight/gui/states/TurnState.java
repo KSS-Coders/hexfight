@@ -49,6 +49,7 @@ public class TurnState extends BasicGameState {
 
     @Override
     public void update(GameContainer container, StateBasedGame game, int delta) throws SlickException {
+        boardDrawer.update(container, delta);
         Input input = container.getInput();
         if(input.isKeyDown(Input.KEY_ESCAPE)){
             game.enterState(State.PAUSE.getCode(),new EmptyTransition(), new VerticalSplitTransition());

@@ -14,8 +14,8 @@ public class TileDrawing {
     private int width;
     private int height;
     private TileDrawingLayer firstLayer;
-    private int xOffset = 50;
-    private int yOffset = 50;
+    private int xOffset = 0;
+    private int yOffset = 0;
 
     public TileDrawing(TileDrawer drawer, Tile tile, int width, int height) {
         this.drawer = drawer;

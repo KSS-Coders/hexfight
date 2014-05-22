@@ -10,18 +10,18 @@ public class ArrayGrid<T> implements Grid<T> {
     private int rows;
     private int cols;
 
-    public ArrayGrid(int rows, int cols){
+    public ArrayGrid(int cols, int rows){
         grid = new Object[rows][cols];
         this.rows = rows;
         this.cols = cols;
     }
 
-    public void set(T tile, int row, int col){
+    public void set(T tile, int col, int row){
         grid[row][col] = tile;
     }
 
     @SuppressWarnings("unchecked")
-    public T get(int row, int col){
+    public T get(int col, int row){
         return (T)grid[row][col];
     }
 
