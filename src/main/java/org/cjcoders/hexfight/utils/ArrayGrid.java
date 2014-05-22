@@ -1,10 +1,10 @@
 package org.cjcoders.hexfight.utils;
 import java.util.Iterator;
-import java.lang.reflect.Array;
+
 /**
  * Created by Max on 2014-05-16.
  */
-public class ArrayGrid<T> implements IGrid<T> {
+public class ArrayGrid<T> implements Grid<T> {
 
     private Object[][] grid;
     private int rows;
@@ -19,6 +19,8 @@ public class ArrayGrid<T> implements IGrid<T> {
     public void set(T tile, int row, int col){
         grid[row][col] = tile;
     }
+
+    @SuppressWarnings("unchecked")
     public T get(int row, int col){
         return (T)grid[row][col];
     }
@@ -38,8 +40,10 @@ public class ArrayGrid<T> implements IGrid<T> {
         private int newCol;
 
         public boolean hasNext(){
-            return (position < rows*cols-1);
+            return (position < rows*cols);
         }
+
+        @SuppressWarnings("unchecked")
         public T next() {
             newRow = position/cols;
             newCol = position%cols;

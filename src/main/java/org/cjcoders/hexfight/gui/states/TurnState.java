@@ -1,12 +1,10 @@
 package org.cjcoders.hexfight.gui.states;
 
-import org.cjcoders.hexfight.Board;
+import org.cjcoders.hexfight.Context;
 import org.cjcoders.hexfight.Player;
-import org.cjcoders.hexfight.Tile;
 import org.cjcoders.hexfight.gui.board.BoardDrawer;
-import org.cjcoders.hexfight.gui.utils.resources.Resources;
+import org.cjcoders.hexfight.gui.board.TileDrawer;
 import org.newdawn.slick.*;
-import org.newdawn.slick.geom.Polygon;
 import org.newdawn.slick.imageout.ImageIOWriter;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
@@ -23,9 +21,13 @@ import java.io.IOException;
 public class TurnState extends BasicGameState {
 
     private Player player;
+    private Image bgImage;
+    private Context context;
+    private BoardDrawer boardDrawer;
 
-    public TurnState(Player player) {
+    public TurnState(Player player, Context context) {
         this.player = player;
+        this.context = context;
     }
 
     @Override
@@ -35,10 +37,14 @@ public class TurnState extends BasicGameState {
 
     @Override
     public void init(GameContainer container, StateBasedGame game) throws SlickException {
+        bgImage = context.resources().getImage("theme-bg");
+        boardDrawer = new BoardDrawer(container, new TileDrawer(context));
     }
 
     @Override
     public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
+        g.drawImage(bgImage, 0, 0);
+        boardDrawer.render(container, g);
     }
 
     @Override

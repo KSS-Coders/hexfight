@@ -5,7 +5,7 @@ import org.cjcoders.hexfight.old.utils.Point;
 /**
  * Created by Max on 2014-05-05.
  */
-public class HexDistanceCalculator implements IDistanceCalculator {
+public class HexCalculator implements TileCalculator {
     public int distCalculate(Point firstPoint, Point secondPoint){
         int xDist = Math.abs(firstPoint.x - secondPoint.x);
         int yDist = Math.abs(firstPoint.y - secondPoint.y);
@@ -22,6 +22,17 @@ public class HexDistanceCalculator implements IDistanceCalculator {
         return distCalculate(firstPoint, secondPoint) == 1;
 
     }
+
+    @Override
+    public int getScreenXFor(int tileX, int tileY, int tileWidth) {
+        return (int) (tileX * 0.75 * tileWidth);
+    }
+
+    @Override
+    public int getScreenYFor(int tileX, int tileY, int tileHeight) {
+        return (int) ((tileY + 0.5 * (tileX % 2)) * tileHeight);
+    }
+
     // Returns exact result if quotient is integer or rounded up if not
     private int intDivisionRoundUp(int dividend, int divisor){
         return (dividend + divisor - 1)/divisor;

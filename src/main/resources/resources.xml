@@ -9,6 +9,7 @@
         <img name="menu-bg" path="menu-bg.jpg">
             <resolution w="1920" h="1080"/>
         </img>
+        <img name="hex-border" path="hex-border.png"/>
         <img name="logo" path="logo.png"/>
         <img name="logo-mini" path="logo-mini.png"/>
     </images>

@@ -59,7 +59,7 @@ public class GameCore extends StateBasedGame{
         addState(new KickState());
         addState(new GameIntroState(context));
         addState(new MainMenuState(context));
-        addState(new PrepareGameState());
+        addState(new PrepareGameState(context));
     }
 
     public static void main(String args[]) throws SlickException {

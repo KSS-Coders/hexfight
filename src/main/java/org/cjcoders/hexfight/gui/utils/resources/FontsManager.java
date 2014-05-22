@@ -1,5 +1,6 @@
 package org.cjcoders.hexfight.gui.utils.resources;
 
+import org.apache.log4j.Logger;
 import org.cjcoders.hexfight.gui.utils.fonts.CustomizableFont;
 import org.newdawn.slick.Font;
 import org.newdawn.slick.util.ResourceLoader;
@@ -14,6 +15,9 @@ import java.util.Map;
  * Created by mrakr_000 on 2014-05-12.
  */
 public class FontsManager {
+
+    private Logger l = Logger.getLogger(this.getClass().getName());
+
     private Map<String, CustomizableFont> fonts;
     private Map<FontSpec, Font> loadedFonts;
 
@@ -31,8 +35,10 @@ public class FontsManager {
     public Font get(String ref, int size, String options) {
         FontSpec spec = new FontSpec(ref, size, options);
         if(loadedFonts.containsKey(spec)){
+            l.trace("Requested font " + spec + ". Loaded.");
             return loadedFonts.get(spec);
         }
+        l.trace("Requested font " + spec + ". Loading.");
         CustomizableFont cFont = fonts.get(ref);
         cFont = cFont.withSize(size);
         if(spec.isBold()) cFont.withStyle(CustomizableFont.BOLD);
@@ -66,6 +72,11 @@ public class FontsManager {
             return isUnderscored() == fs.isUnderscored() &&
                     isBold() == fs.isBold() &&
                     isItalic() == fs.isItalic();
+        }
+
+        @Override
+        public String toString() {
+            return "[" + ref + ", " + size + ", " + options + "]";
         }
 
         private boolean isUnderscored() {
