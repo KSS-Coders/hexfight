@@ -17,4 +17,5 @@
         <font name="cubic" path="cubic.ttf"/>
         <font name="forces-squared" path="forces-squared.ttf"/>
     </fonts>
+    <config path="hexed.config"/>
 </resources>
