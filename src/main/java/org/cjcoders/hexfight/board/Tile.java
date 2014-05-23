@@ -18,11 +18,11 @@ public class Tile{
     private int tileNo;
     private TileForces forces;
 
-    public Tile(int x, int y, int tilesCount){
+    public Tile(int x, int y, int tileNo){
         this.x = x;
         this.y = y;
-        tileNo = new Random().nextInt(tilesCount*FILL_SPAWN_RATE);
-        forces = TileForces.NEUTRAL_DEFAULT;
+        this.tileNo = tileNo;
+        forces = TileForces.NEUTRAL_DEFAULT();
     }
 
     public int getTileNo() {

@@ -8,13 +8,16 @@ import org.newdawn.slick.gui.GUIContext;
  * Created by mrakr_000 on 2014-05-22.
  */
 public class TileDrawing {
+
+
+
     private TileDrawer drawer;
     private Tile tile;
     private int width;
     private int height;
     private TileDrawingLayer firstLayer;
-    private int xOffset = 0;
-    private int yOffset = 0;
+    private int xOffset = 50;
+    private int yOffset = 50;
 
     public TileDrawing(TileDrawer drawer, Tile tile, int width, int height) {
         this.drawer = drawer;
@@ -25,15 +28,15 @@ public class TileDrawing {
         firstLayer.init(this);
     }
 
-    public void render(GUIContext container, Graphics g) {
-        firstLayer.render(this, container, g);
+    public void render(GUIContext container, Graphics g, int xOffset, int yOffset) {
+        firstLayer.render(this, container, g, xOffset, yOffset);
     }
 
     public int getX(){
-        return new HexCalculator().getScreenXFor(tile.getX(), tile.getY(), width) + xOffset;
+        return new HexCalculator().getScreenXFor(tile.getX(), tile.getY(), width);
     }
     public int getY(){
-        return new HexCalculator().getScreenYFor(tile.getX(), tile.getY(), height) + yOffset;
+        return new HexCalculator().getScreenYFor(tile.getX(), tile.getY(), height);
     }
 
     public int getWidth() {

@@ -19,7 +19,7 @@ public class TileForces {
         if(this.strength < 0) this.strength = 0;
     }
 
-    public static final TileForces NEUTRAL_DEFAULT = new TileForces((int) (Math.random() * 4));
+    public static final TileForces NEUTRAL_DEFAULT(){ return new TileForces((int) (Math.random() * 4)); }
     public static final TileForces OWNED_DEFAULT = new TileForces(5);
 
     public boolean isCritical(){

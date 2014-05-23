@@ -27,6 +27,9 @@ public class BoardDrawer extends MouseOverArea{
     private int screenWidth;
     private int screenHeight;
 
+    private static final int LOG_FRAMES = 120;
+    private int framesFromLog = 0;
+
     private Logger l = Logger.getLogger(this.getClass().getName());
 
     public BoardDrawer(GUIContext c, TileDrawer tileDrawer) throws SlickException {
@@ -75,10 +78,52 @@ public class BoardDrawer extends MouseOverArea{
     }
 
     public void render(GUIContext container, Graphics g){
+        int tilesInRange = 0;
         for(TileDrawing d : tiles){
-            d.render(container, g);
+            if(inRange(d)) {
+                ++tilesInRange;
+                d.render(container, g, xOffset, yOffset);
+            }
+        }
+        if(++framesFromLog == LOG_FRAMES) {
+            l.info("Tiles in range: " + tilesInRange);
+            l.info("X offset: " + xOffset + "  Y offset: " + yOffset);
+            l.info("Right border: " + (xOffset + screenWidth));
+            l.info("Left border: " + xOffset);
+            l.info("Down border: " + (yOffset + screenHeight));
+            l.info("Up border: " + yOffset);
+            framesFromLog = 0;
         }
     }
+
+    private boolean inRange(TileDrawing d) {
+        return fitsHorizontaly(d) && fitsVerticaly(d);
+    }
+
+    private boolean fitsVerticaly(TileDrawing d) {
+        return fitsUp(d) && fitsDown(d);
+    }
+
+    private boolean fitsDown(TileDrawing d) {
+        return d.getY() < -yOffset + screenHeight;
+    }
+
+    private boolean fitsUp(TileDrawing d) {
+        return d.getY() + d.getHeight() > -yOffset;
+    }
+
+    private boolean fitsHorizontaly(TileDrawing d) {
+        return fitsLeft(d) && fitsRight(d);
+    }
+
+    private boolean fitsRight(TileDrawing d) {
+        return d.getX() < -xOffset + screenWidth;
+    }
+
+    private boolean fitsLeft(TileDrawing d) {
+        return d.getX() + d.getWidth() > -xOffset;
+    }
+
     public void updateOffset(int dx, int dy){
         if(!xLocked) {
             xOffset += dx;
