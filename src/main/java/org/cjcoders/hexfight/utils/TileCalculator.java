@@ -10,4 +10,6 @@ public interface TileCalculator {
     int getScreenXFor(int tileX, int tileY, int tileWidth);
 
     int getScreenYFor(int tileX, int tileY, int tileHeight);
+
+    Point getBorardCoordinates(int screenX, int screenY, int tileWidth, int tileHeight);
 }

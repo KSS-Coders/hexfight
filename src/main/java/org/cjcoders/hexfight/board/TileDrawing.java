@@ -7,17 +7,13 @@ import org.newdawn.slick.gui.GUIContext;
 /**
  * Created by mrakr_000 on 2014-05-22.
  */
-public class TileDrawing {
-
-
+public class TileDrawing implements TileListener {
 
     private TileDrawer drawer;
     private Tile tile;
     private int width;
     private int height;
     private TileDrawingLayer firstLayer;
-    private int xOffset = 50;
-    private int yOffset = 50;
 
     public TileDrawing(TileDrawer drawer, Tile tile, int width, int height) {
         this.drawer = drawer;
@@ -26,6 +22,7 @@ public class TileDrawing {
         this.height = height;
         firstLayer = drawer.getDrawing(tile);
         firstLayer.init(this);
+        tile.addListener(this);
     }
 
     public void render(GUIContext container, Graphics g, int xOffset, int yOffset) {
@@ -59,11 +56,9 @@ public class TileDrawing {
         return getY() + height / 2;
     }
 
-    public void setXOffset(int XOffset) {
-        this.xOffset = XOffset;
-    }
-
-    public void setYOffset(int YOffset) {
-        this.yOffset = YOffset;
+    @Override
+    public void update(Tile tile) {
+        firstLayer = drawer.getDrawing(tile);
+        firstLayer.init(this);
     }
 }

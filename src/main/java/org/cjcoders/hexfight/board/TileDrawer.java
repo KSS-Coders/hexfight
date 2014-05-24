@@ -39,6 +39,9 @@ public class TileDrawer {
         if(showGrid){
             tileDrawing = tileDrawing.setNextLayer(new GridLines());
         }
+        if(tile.isActive()){
+            tileDrawing = tileDrawing.setNextLayer(new ActiveLayer());
+        }
         return tileDrawing;
     }
 
@@ -107,6 +110,14 @@ public class TileDrawer {
                     return new Vector2f(new float[]{1,0});
                 }
             });
+        }
+    }
+
+    private class ActiveLayer extends TileDrawingLayer {
+        @Override
+        protected void selfRender(TileDrawing tileDrawing, GUIContext container, Graphics g, int xOffset, int yOffset) {
+            Shape shape = new Hexagon(tileDrawing.getWidth(), tileDrawing.getX() + xOffset, tileDrawing.getY() + yOffset);
+            g.fill(shape);
         }
     }
 }

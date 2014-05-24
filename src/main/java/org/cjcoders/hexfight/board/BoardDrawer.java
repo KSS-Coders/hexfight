@@ -2,6 +2,8 @@ package org.cjcoders.hexfight.board;
 
 import org.apache.log4j.Logger;
 import org.cjcoders.hexfight.utils.HexCalculator;
+import org.cjcoders.hexfight.utils.Point;
+import org.lwjgl.input.Mouse;
 import org.newdawn.slick.*;
 import org.newdawn.slick.gui.GUIContext;
 import org.newdawn.slick.gui.MouseOverArea;
@@ -17,7 +19,7 @@ public class BoardDrawer extends MouseOverArea{
     private static final int TILE_SIZE = 100;
     private static final int PADDING = 50;
 
-    private Board board = Board.getDefault(30, 20, 3);
+    private Board board = Board.getDefault(15, 15, 3);
     private TileDrawer tileDrawer;
     private List<TileDrawing> tiles;
     private boolean xLocked;
@@ -27,7 +29,7 @@ public class BoardDrawer extends MouseOverArea{
     private int screenWidth;
     private int screenHeight;
 
-    private static final int LOG_FRAMES = 120;
+    private static final int LOG_FRAMES = 2400;
     private int framesFromLog = 0;
 
     private Logger l = Logger.getLogger(this.getClass().getName());
@@ -47,6 +49,17 @@ public class BoardDrawer extends MouseOverArea{
         if(getBoardHeight() < c.getHeight()){
             int yOffset = (c.getHeight() - getBoardHeight())/2;
             setYOffset(yOffset);
+        }
+    }
+
+    @Override
+    public void mousePressed(int button, int mx, int my) {
+        if(button == Input.MOUSE_LEFT_BUTTON){
+            int x = mx - xOffset;
+            int y = my - yOffset;
+            Point p = new HexCalculator().getBorardCoordinates(x, y, TILE_SIZE, TILE_SIZE);
+            l.info("Clicked: " + p.x + " " + p.y + " on screen: " + x + " " + y );
+            board.getGrid().get(p.x, p.y).switchActive();
         }
     }
 
@@ -129,25 +142,16 @@ public class BoardDrawer extends MouseOverArea{
             xOffset += dx;
             if (xOffset > PADDING && dx > 0) xOffset = PADDING;
             else if (-xOffset > getBoardWidth() - screenWidth && dx < 0) xOffset = -(getBoardWidth() - screenWidth + PADDING);
-            for (TileDrawing d : tiles) {
-                d.setXOffset(xOffset);
-            }
         }
         if(!yLocked) {
             yOffset += dy;
             if (yOffset > PADDING && dy > 0) yOffset = PADDING;
             else if (-yOffset > getBoardHeight() - screenHeight && dy < 0) yOffset = -(getBoardHeight() - screenHeight + PADDING);
-            for (TileDrawing d : tiles) {
-                d.setYOffset(yOffset);
-            }
         }
     }
     public void setXOffset(int x){
         setXLocked(true);
         xOffset = x;
-        for(TileDrawing d : tiles){
-            d.setXOffset(x);
-        }
     }
 
     public void setXLocked(boolean xLocked) {
@@ -161,9 +165,6 @@ public class BoardDrawer extends MouseOverArea{
     public void setYOffset(int y){
         setYLocked(true);
         yOffset = y;
-        for(TileDrawing d : tiles){
-            d.setYOffset(y);
-        }
     }
 
 }

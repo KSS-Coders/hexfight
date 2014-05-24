@@ -32,6 +32,7 @@ public class Board{
             b.getGrid().set(new Tile(x, y, (int) (Math.random() * (5))), x, y);
             b.getGrid().get(x, y).setOwner(players[i]);
             b.getGrid().get(x, y).setForces(TileForces.OWNED_DEFAULT);
+            l.info("Player " + i + ": [" + x + ", " + y + "]");
         }
 
         for(int x = 0; x < width; ++x){
