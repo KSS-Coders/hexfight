@@ -1,6 +1,5 @@
 package org.cjcoders.hexfight.board;
 
-import org.cjcoders.hexfight.utils.HexCalculator;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.gui.GUIContext;
 
@@ -10,16 +9,17 @@ import org.newdawn.slick.gui.GUIContext;
 public class TileDrawing implements TileListener {
 
     private TileDrawer drawer;
+
+    public Tile getTile() {
+        return tile;
+    }
+
     private Tile tile;
-    private int width;
-    private int height;
     private TileDrawingLayer firstLayer;
 
-    public TileDrawing(TileDrawer drawer, Tile tile, int width, int height) {
+    public TileDrawing(TileDrawer drawer, Tile tile) {
         this.drawer = drawer;
         this.tile = tile;
-        this.width = width;
-        this.height = height;
         firstLayer = drawer.getDrawing(tile);
         firstLayer.init(this);
         tile.addListener(this);
@@ -30,30 +30,22 @@ public class TileDrawing implements TileListener {
     }
 
     public int getX(){
-        return new HexCalculator().getScreenXFor(tile.getX(), tile.getY(), width);
+        return drawer.getX(tile.getX(), tile.getY());
     }
     public int getY(){
-        return new HexCalculator().getScreenYFor(tile.getX(), tile.getY(), height);
+        return drawer.getY(tile.getX(), tile.getY());
     }
 
-    public int getWidth() {
-        return width;
-    }
-
-    public int getHeight() {
-        return height;
-    }
-
-    public Tile getTile() {
-        return tile;
+    public int getSize() {
+        return drawer.getTileSize();
     }
 
     public int getCenterX() {
-        return getX() + width / 2;
+        return drawer.getCenterX(tile.getX(), tile.getY());
     }
 
     public int getCenterY() {
-        return getY() + height / 2;
+        return drawer.getCenterY(tile.getX(), tile.getY());
     }
 
     @Override

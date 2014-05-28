@@ -1,7 +1,5 @@
 package org.cjcoders.hexfight.utils;
 
-import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -20,7 +18,7 @@ public class HexCalculatorTests {
         int sideSize = 100;
 
         for(int i = 0 ; i < screenX.length ; ++i) {
-            Point p = new HexCalculator().getBorardCoordinates(screenX[i], screenY[i], sideSize, sideSize);
+            Point p = new HexCalculator(sideSize).getBorardCoordinates(screenX[i], screenY[i]);
 
             assertEquals("i should be " + expectedI[i] + " for given coordinates.", expectedI[i], p.x);
             assertEquals("j should be " + expectedJ[i] + " for given coordinates.", expectedJ[i], p.y);

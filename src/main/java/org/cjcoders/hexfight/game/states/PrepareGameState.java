@@ -15,19 +15,12 @@ import org.newdawn.slick.state.StateBasedGame;
  */
 public class PrepareGameState extends BasicGameState{
     public PrepareGameState() {
-
-        this.context = Context.getInstance();
     }
 
     @Override
     public int getID() {
         return State.PREPARE_GAME.getCode();
     }
-
-    private Player firstPlayer;
-    private Board board;
-    private Image bg;
-    private Context context;
 
     @Override
     public void init(GameContainer container, StateBasedGame game) throws SlickException {
@@ -40,19 +33,7 @@ public class PrepareGameState extends BasicGameState{
 
     @Override
     public void update(GameContainer container, StateBasedGame game, int delta) throws SlickException {
-        try{
-            game.getState(State.turnStateID(firstPlayer)).init(container, game);
-        }
-        catch (NullPointerException e){
-            firstPlayer = new Player(1);
-            bg = context.resources().getImage("menu-bg");
-            board = new Board(30, 30);
-
-            TurnState state = new TurnState(firstPlayer);
-            state.init(container, game);
-            game.addState(state);
-        }
-        game.enterState(State.turnStateID(firstPlayer));
+        game.enterState(State.TURN.getCode());
     }
 
 

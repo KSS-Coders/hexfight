@@ -2,10 +2,7 @@ package org.cjcoders.hexfight.game;
 
 import org.apache.log4j.BasicConfigurator;
 import org.cjcoders.hexfight.context.Context;
-import org.cjcoders.hexfight.game.states.GameIntroState;
-import org.cjcoders.hexfight.game.states.KickState;
-import org.cjcoders.hexfight.game.states.MainMenuState;
-import org.cjcoders.hexfight.game.states.PrepareGameState;
+import org.cjcoders.hexfight.game.states.*;
 import org.cjcoders.hexfight.context.resources.Resources;
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.GameContainer;
@@ -47,6 +44,7 @@ public class GameCore extends StateBasedGame{
         addState(new GameIntroState());
         addState(new MainMenuState());
         addState(new PrepareGameState());
+        addState(new PlayState());
     }
 
     public static void main(String args[]) throws SlickException {

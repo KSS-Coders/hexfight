@@ -2,6 +2,7 @@ package org.cjcoders.hexfight.board;
 
 import org.cjcoders.hexfight.context.Context;
 import org.cjcoders.hexfight.game.Player;
+import org.cjcoders.hexfight.utils.TileCalculator;
 import org.newdawn.slick.*;
 import org.newdawn.slick.geom.Shape;
 import org.newdawn.slick.geom.Vector2f;
@@ -16,9 +17,11 @@ public class TileDrawer {
 
     private Context context;
     private SpriteSheet tiles;
+    private TileCalculator calculator;
     private boolean showGrid = true;
 
-    public TileDrawer() {
+    public TileDrawer(TileCalculator calculator) {
+        this.calculator = calculator;
         this.context = Context.getInstance();
         Image tiles = context.resources().getImage("tiles");
         this.tiles = new SpriteSheet(tiles, tiles.getHeight(), tiles.getHeight());
@@ -49,11 +52,31 @@ public class TileDrawer {
         return colors[p.getID()];
     }
 
+    public int getX(int x, int y) {
+        return calculator.getScreenXFor(x, y);
+    }
+
+    public int getY(int x, int y) {
+        return calculator.getScreenYFor(x, y);
+    }
+
+    public int getTileSize() {
+        return calculator.getTileSize();
+    }
+
+    public int getCenterX(int x, int y) {
+        return getX(x, y) + calculator.getTileSize()/2;
+    }
+
+    public int getCenterY(int x, int y) {
+        return getY(x, y) + calculator.getTileSize()/2;
+    }
+
     private class OwnedTileLayer extends TileDrawingLayer {
         private Image border;
 
         private OwnedTileLayer() {
-            this.border = context.resources().getImage("hex-border").getScaledCopy(2);
+            this.border = context.resources().getImage("hex-border");
         }
 
         @Override
@@ -83,14 +106,14 @@ public class TileDrawer {
 
         @Override
         public void selfInit(TileDrawing drawing) {
-            font = context.resources().getFont("forces-squared", drawing.getHeight()/3);
+            font = context.resources().getFont("forces-squared", getTileSize()/3);
         }
 
         @Override
         protected void selfRender(TileDrawing tileDrawing, GUIContext container, Graphics g, int xOffset, int yOffset) {
             String s = "" + tileDrawing.getTile().getForces().getStrength();
-            int x = tileDrawing.getX() + (tileDrawing.getWidth() - font.getWidth(s))/2 + xOffset;
-            int y = tileDrawing.getY() + (tileDrawing.getHeight() - font.getHeight(s))/2 + yOffset;
+            int x = tileDrawing.getX() + (getTileSize() - font.getWidth(s))/2 + xOffset;
+            int y = tileDrawing.getY() + (getTileSize() - font.getHeight(s))/2 + yOffset;
             font.drawString(x, y, s);
         }
     }
@@ -98,7 +121,7 @@ public class TileDrawer {
     private class GridLines extends TileDrawingLayer {
         @Override
         protected void selfRender(TileDrawing drawing, GUIContext container, Graphics g, int xOffset, int yOffset) {
-            Shape shape = new Hexagon(drawing.getWidth(), drawing.getX() + xOffset, drawing.getY() + yOffset);
+            Shape shape = new Hexagon(drawing.getSize(), drawing.getX() + xOffset, drawing.getY() + yOffset);
             g.draw(shape, new ShapeFill() {
                 @Override
                 public Color colorAt(Shape shape, float x, float y) {

@@ -1,182 +1,42 @@
 package org.cjcoders.hexfight.board;
 
-import org.apache.log4j.Logger;
-import org.cjcoders.hexfight.game.Player;
-import org.cjcoders.hexfight.utils.HexCalculator;
 import org.cjcoders.hexfight.utils.Point;
-import org.lwjgl.input.Mouse;
-import org.newdawn.slick.*;
-import org.newdawn.slick.gui.GUIContext;
-import org.newdawn.slick.gui.MouseOverArea;
+import org.cjcoders.hexfight.utils.TileCalculator;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
+import java.util.HashSet;
 
 /**
- * Created by mrakr_000 on 2014-05-15.
+ * Created by mrakr_000 on 2014-05-28.
  */
-public class BoardDrawer extends MouseOverArea{
+public class BoardDrawer {
 
-    private static final int TILE_SIZE = 100;
-    private static final int PADDING = 50;
+    private final TileCalculator tileCalculator;
+    private final TileDrawer tileDrawer;
 
-    private Board board = Board.getDefault(15, 15, 3);
-    private TileDrawer tileDrawer;
-    private List<TileDrawing> tiles;
-    private boolean xLocked;
-    private boolean yLocked;
-    private int xOffset = PADDING;
-    private int yOffset = PADDING;
-    private int screenWidth;
-    private int screenHeight;
-
-    private int currentPlayer = 0;
-    private int nextPlayer(){return currentPlayer++; }
-
-    private static final int LOG_FRAMES = 2400;
-    private int framesFromLog = 0;
-
-    private Logger l = Logger.getLogger(this.getClass().getName());
-    private boolean mouseDragged;
-
-    public BoardDrawer(GUIContext c, TileDrawer tileDrawer) throws SlickException {
-        super(c, new Image(0, 0), 0, 0);
+    public BoardDrawer(TileCalculator tileCalculator, TileDrawer tileDrawer) {
+        this.tileCalculator = tileCalculator;
         this.tileDrawer = tileDrawer;
-        tiles = new ArrayList<>();
+    }
+
+    public Collection<TileDrawing> getDrawing(Board board){
+        Collection<TileDrawing> result = new HashSet<>();
         for(Tile tile : board.getGrid()) {
-            tiles.add(new TileDrawing(tileDrawer, tile, TILE_SIZE, TILE_SIZE));
+            result.add(new TileDrawing(tileDrawer, tile));
         }
-
-        if(getBoardWidth() < c.getWidth()){
-            int xOffset = (c.getWidth() - getBoardWidth())/2;
-            setXOffset(xOffset);
-        }
-        if(getBoardHeight() < c.getHeight()){
-            int yOffset = (c.getHeight() - getBoardHeight())/2;
-            setYOffset(yOffset);
-        }
+        return result;
     }
 
-    @Override
-    public void mouseReleased(int button, int mx, int my) {
-        if(!mouseDragged && button == Input.MOUSE_LEFT_BUTTON){
-            int x = mx - xOffset;
-            int y = my - yOffset;
-            Point p = new HexCalculator().getBorardCoordinates(x, y, TILE_SIZE, TILE_SIZE);
-            l.info("Clicked: " + p.x + " " + p.y + " on screen: " + x + " " + y );
-            Tile t = board.getGrid().get(p.x, p.y);
-            if(t.isOwned()) t.setOwner(null);
-            else t.setOwner(new Player(nextPlayer()));
-            if(t.getForces().isEmpty()) t.setForces(TileForces.OWNED_DEFAULT);
-            else t.setForces(new TileForces(0));
-            t.switchActive();
-        }
-        else mouseDragged = false;
+    public Point getTileCooridnates(int x, int y) {
+        return tileCalculator.getBorardCoordinates(x, y);
     }
 
-    public int getBoardHeight(){
-        Tile t2 = board.getGrid().get(board.getGrid().cols()-1, board.getGrid().rows()-1);
-        return new HexCalculator().getScreenYFor(t2.getX(), t2.getY(), TILE_SIZE) + TILE_SIZE;
-    }
-    public int getBoardWidth(){
-        Tile t2 = board.getGrid().get(board.getGrid().cols()-1, board.getGrid().rows()-1);
-        return new HexCalculator().getScreenXFor(t2.getX(), t2.getY(), TILE_SIZE) + TILE_SIZE;
+    public int getBoardHeight(int rows, int cols) {
+        return tileCalculator.getScreenYFor(rows, cols) + tileCalculator.getTileSize();
     }
 
-    private int getRandNum() {
-        int min = 0;
-        int max = 100;
-        return min + (int)(Math.random() * ((max - min) + 1));
-    }
-
-    @Override
-    public void mouseDragged(int oldx, int oldy, int newx, int newy) {
-        mouseDragged = true;
-        int dx = newx - oldx;
-        int dy = newy - oldy;
-        updateOffset(dx,dy);
-    }
-
-    public void update(GUIContext container, int delta){
-        screenWidth = container.getWidth();
-        screenHeight = container.getHeight();
-    }
-
-    public void render(GUIContext container, Graphics g){
-        int tilesInRange = 0;
-        for(TileDrawing d : tiles){
-            if(inRange(d)) {
-                ++tilesInRange;
-                d.render(container, g, xOffset, yOffset);
-            }
-        }
-        if(++framesFromLog == LOG_FRAMES) {
-            l.info("Tiles in range: " + tilesInRange);
-            l.info("X offset: " + xOffset + "  Y offset: " + yOffset);
-            l.info("Right border: " + (xOffset + screenWidth));
-            l.info("Left border: " + xOffset);
-            l.info("Down border: " + (yOffset + screenHeight));
-            l.info("Up border: " + yOffset);
-            framesFromLog = 0;
-        }
-    }
-
-    private boolean inRange(TileDrawing d) {
-        return fitsHorizontaly(d) && fitsVerticaly(d);
-    }
-
-    private boolean fitsVerticaly(TileDrawing d) {
-        return fitsUp(d) && fitsDown(d);
-    }
-
-    private boolean fitsDown(TileDrawing d) {
-        return d.getY() < -yOffset + screenHeight;
-    }
-
-    private boolean fitsUp(TileDrawing d) {
-        return d.getY() + d.getHeight() > -yOffset;
-    }
-
-    private boolean fitsHorizontaly(TileDrawing d) {
-        return fitsLeft(d) && fitsRight(d);
-    }
-
-    private boolean fitsRight(TileDrawing d) {
-        return d.getX() < -xOffset + screenWidth;
-    }
-
-    private boolean fitsLeft(TileDrawing d) {
-        return d.getX() + d.getWidth() > -xOffset;
-    }
-
-    public void updateOffset(int dx, int dy){
-        if(!xLocked) {
-            xOffset += dx;
-            if (xOffset > PADDING && dx > 0) xOffset = PADDING;
-            else if (-xOffset > getBoardWidth() - screenWidth && dx < 0) xOffset = -(getBoardWidth() - screenWidth + PADDING);
-        }
-        if(!yLocked) {
-            yOffset += dy;
-            if (yOffset > PADDING && dy > 0) yOffset = PADDING;
-            else if (-yOffset > getBoardHeight() - screenHeight && dy < 0) yOffset = -(getBoardHeight() - screenHeight + PADDING);
-        }
-    }
-    public void setXOffset(int x){
-        setXLocked(true);
-        xOffset = x;
-    }
-
-    public void setXLocked(boolean xLocked) {
-        this.xLocked = xLocked;
-    }
-
-    public void setYLocked(boolean yLocked) {
-        this.yLocked = yLocked;
-    }
-
-    public void setYOffset(int y){
-        setYLocked(true);
-        yOffset = y;
+    public int getBoardWidth(int rows, int cols){
+        return tileCalculator.getScreenXFor(rows, cols) + tileCalculator.getTileSize();
     }
 
 }

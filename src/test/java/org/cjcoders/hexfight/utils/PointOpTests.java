@@ -20,7 +20,7 @@ public class PointOpTests {
         Point firstPoint = new Point(2,3);
         Point secondPoint = new Point(3,3);
         Point thirdPoint = new Point(3,4);
-        HexCalculator distCalcObj = new HexCalculator();
+        HexCalculator distCalcObj = new HexCalculator(100);
         assertEquals("Result should be true(these points are nearby each others)", true, distCalcObj.isNearby(firstPoint, secondPoint));
         //assertEquals("Result should be true(these points are nearby each others)", true, distCalcObj.isNearby(firstPoint, thirdPoint));
     }
@@ -29,7 +29,7 @@ public class PointOpTests {
     public void distanceIsProperlyCalculated(){
         Point firstPoint = new Point(5,1);
         Point secondPoint = new Point(1,7);
-        HexCalculator distCalc = new HexCalculator();
+        HexCalculator distCalc = new HexCalculator(100);
 
         assertEquals("Distance between firstPoint(5,1) and secondPoint(1,7) should be 8",8,distCalc.distCalculate(firstPoint, secondPoint));
 /*
