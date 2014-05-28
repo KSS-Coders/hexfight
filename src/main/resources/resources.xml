@@ -12,6 +12,7 @@
         <img name="hex-border" path="hex-border.png"/>
         <img name="logo" path="logo.png"/>
         <img name="logo-mini" path="logo-mini.png"/>
+        <img name="units" path="themes/space/units.png" />
     </images>
     <fonts>
         <font name="cubic" path="cubic.ttf"/>

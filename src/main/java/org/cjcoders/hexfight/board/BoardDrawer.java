@@ -1,6 +1,7 @@
 package org.cjcoders.hexfight.board;
 
 import org.apache.log4j.Logger;
+import org.cjcoders.hexfight.game.Player;
 import org.cjcoders.hexfight.utils.HexCalculator;
 import org.cjcoders.hexfight.utils.Point;
 import org.lwjgl.input.Mouse;
@@ -29,10 +30,14 @@ public class BoardDrawer extends MouseOverArea{
     private int screenWidth;
     private int screenHeight;
 
+    private int currentPlayer = 0;
+    private int nextPlayer(){return currentPlayer++; }
+
     private static final int LOG_FRAMES = 2400;
     private int framesFromLog = 0;
 
     private Logger l = Logger.getLogger(this.getClass().getName());
+    private boolean mouseDragged;
 
     public BoardDrawer(GUIContext c, TileDrawer tileDrawer) throws SlickException {
         super(c, new Image(0, 0), 0, 0);
@@ -53,14 +58,20 @@ public class BoardDrawer extends MouseOverArea{
     }
 
     @Override
-    public void mousePressed(int button, int mx, int my) {
-        if(button == Input.MOUSE_LEFT_BUTTON){
+    public void mouseReleased(int button, int mx, int my) {
+        if(!mouseDragged && button == Input.MOUSE_LEFT_BUTTON){
             int x = mx - xOffset;
             int y = my - yOffset;
             Point p = new HexCalculator().getBorardCoordinates(x, y, TILE_SIZE, TILE_SIZE);
             l.info("Clicked: " + p.x + " " + p.y + " on screen: " + x + " " + y );
-            board.getGrid().get(p.x, p.y).switchActive();
+            Tile t = board.getGrid().get(p.x, p.y);
+            if(t.isOwned()) t.setOwner(null);
+            else t.setOwner(new Player(nextPlayer()));
+            if(t.getForces().isEmpty()) t.setForces(TileForces.OWNED_DEFAULT);
+            else t.setForces(new TileForces(0));
+            t.switchActive();
         }
+        else mouseDragged = false;
     }
 
     public int getBoardHeight(){
@@ -80,6 +91,7 @@ public class BoardDrawer extends MouseOverArea{
 
     @Override
     public void mouseDragged(int oldx, int oldy, int newx, int newy) {
+        mouseDragged = true;
         int dx = newx - oldx;
         int dy = newy - oldy;
         updateOffset(dx,dy);

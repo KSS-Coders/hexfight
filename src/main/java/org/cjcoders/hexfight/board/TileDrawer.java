@@ -12,7 +12,7 @@ import org.newdawn.slick.gui.GUIContext;
  */
 public class TileDrawer {
 
-    private static final Color[] colors = new Color[]{Color.blue, Color.green, Color.red, Color.yellow};
+    private static final Color[] colors = new Color[]{Color.blue, Color.green, Color.red, Color.yellow, Color.darkGray, Color.cyan};
 
     private Context context;
     private SpriteSheet tiles;
@@ -29,18 +29,18 @@ public class TileDrawer {
         if(tile.getTileNo() < tiles.getHorizontalCount()){
             Image img = tiles.getSubImage(tile.getTileNo(), 0);
             tileDrawing = tileDrawing.setNextLayer(new LocationLayer(img));
-            if(tile.isOwned()){
-                tileDrawing = tileDrawing.setNextLayer(new OwnedTileLayer());
-            }
-            if(!tile.getForces().isEmpty()){
-                tileDrawing = tileDrawing.setNextLayer(new EnforcedTileLayer());
-            }
+        }
+        if(tile.isOwned()){
+            tileDrawing = tileDrawing.setNextLayer(new OwnedTileLayer());
         }
         if(showGrid){
             tileDrawing = tileDrawing.setNextLayer(new GridLines());
         }
         if(tile.isActive()){
-            tileDrawing = tileDrawing.setNextLayer(new ActiveLayer());
+            tileDrawing = tileDrawing.setNextLayer(new ActiveLayer(tile.getOwner().getID()));
+        }
+        if(!tile.getForces().isEmpty()){
+            tileDrawing = tileDrawing.setNextLayer(new EnforcedTileLayer());
         }
         return tileDrawing;
     }
@@ -107,17 +107,25 @@ public class TileDrawer {
 
                 @Override
                 public Vector2f getOffsetAt(Shape shape, float x, float y) {
-                    return new Vector2f(new float[]{1,0});
+                    return new Vector2f(new float[]{0,0});
                 }
             });
         }
     }
 
     private class ActiveLayer extends TileDrawingLayer {
+        private final SpriteSheet tileImg;
+
+        public ActiveLayer(int num){
+            tileImg = new SpriteSheet(Context.getInstance().resources().getImage("units"),70,70);
+        }
+
         @Override
         protected void selfRender(TileDrawing tileDrawing, GUIContext container, Graphics g, int xOffset, int yOffset) {
-            Shape shape = new Hexagon(tileDrawing.getWidth(), tileDrawing.getX() + xOffset, tileDrawing.getY() + yOffset);
-            g.fill(shape);
+            Image img = tileImg.getSubImage(tileDrawing.getTile().getOwner().getID(),0);
+            int x = tileDrawing.getCenterX() - img.getWidth()/2 + xOffset;
+            int y = tileDrawing.getCenterY() - img.getHeight()/2 + yOffset;
+            g.drawImage(img, x, y);
         }
     }
 }

@@ -61,6 +61,7 @@ public class Tile{
 
     public void setOwner(Player owner) {
         this.owner = owner;
+        notifyListeners();
     }
 
     public TileForces getForces() {
@@ -69,6 +70,7 @@ public class Tile{
 
     public void setForces(TileForces forces) {
         this.forces = forces;
+        notifyListeners();
     }
 
     public boolean isActive() {
