@@ -46,8 +46,8 @@ public class GridTests {
     {
         ArrayGrid<Integer> grid = new ArrayGrid<>(1,1);
         Iterator it = grid.iterator();
-        //assertTrue(it.hasNext());
-        assertFalse(it.hasNext());
+        assertTrue(it.hasNext());
+        //assertFalse(it.hasNext());
     }
     @Test
     public void iteratorNextTest(){

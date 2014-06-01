@@ -51,7 +51,6 @@ public class GameCore extends StateBasedGame{
         GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
         int width = gd.getDisplayMode().getWidth();
         int height = gd.getDisplayMode().getHeight();
-        BasicConfigurator.configure();
         AppGameContainer app = new AppGameContainer(new GameCore("Hexfight"));
         app.setDisplayMode(width, height, true);
         app.setShowFPS(false);

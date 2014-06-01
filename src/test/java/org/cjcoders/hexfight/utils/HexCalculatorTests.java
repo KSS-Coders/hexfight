@@ -1,5 +1,7 @@
 package org.cjcoders.hexfight.utils;
 
+import org.apache.log4j.BasicConfigurator;
+import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -7,6 +9,11 @@ import static org.junit.Assert.*;
  * Created by mrakr_000 on 2014-05-23.
  */
 public class HexCalculatorTests {
+
+    @Before
+    public void setup(){
+        BasicConfigurator.configure();
+    }
 
     @Test
 //    @Ignore
@@ -20,8 +27,8 @@ public class HexCalculatorTests {
         for(int i = 0 ; i < screenX.length ; ++i) {
             Point p = new HexCalculator(sideSize).getBorardCoordinates(screenX[i], screenY[i]);
 
-            assertEquals("i should be " + expectedI[i] + " for given coordinates.", expectedI[i], p.x);
-            assertEquals("j should be " + expectedJ[i] + " for given coordinates.", expectedJ[i], p.y);
+            assertEquals("i should be " + expectedI[i] + " for coordinates [" + screenX[i] + ", " + screenY[i] + "].", expectedI[i], p.x);
+            assertEquals("j should be " + expectedJ[i] + " for coordinates [" + screenX[i] + ", " + screenY[i] + "].", expectedJ[i], p.y);
         }
     }
 

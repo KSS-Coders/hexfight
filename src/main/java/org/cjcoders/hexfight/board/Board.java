@@ -18,7 +18,7 @@ public class Board{
     private Grid<Tile> grid;
 
     public Board(int width, int height) {
-        grid = new ArrayGrid<>(width, height);
+        grid = new ArrayGrid<>(height, width);
     }
 
     public static Board getDefault(int width, int height, int playersCount) {
@@ -29,24 +29,20 @@ public class Board{
             players[i] = new Player(i);
             int x = (int) (Math.random() * (width - 1));
             int y = (int) (Math.random() * (height - 1));
-            b.getGrid().set(new Tile(x, y, (int) (Math.random() * (5))), x, y);
-            b.getGrid().get(x, y).setOwner(players[i]);
-            b.getGrid().get(x, y).setForces(TileForces.OWNED_DEFAULT);
+            b.getGrid().set(new Tile(x, y, (int) (Math.random() * (5))), y, x);
+            b.getGrid().get(y, x).setOwner(players[i]);
+            b.getGrid().get(y, x).setForces(TileForces.OWNED_DEFAULT);
             l.info("Player " + i + ": [" + x + ", " + y + "]");
         }
 
         for(int x = 0; x < width; ++x){
             for(int y = 0; y < height; ++y){
-                if(b.grid.get(x, y) != null) continue;
+                if(b.grid.get(y, x) != null) continue;
                 if(Math.random() > 0.25)
-                    b.grid.set(new Tile(x, y, 6), x, y);
+                    b.grid.set(new Tile(x, y, 6), y, x);
                 else
-                    b.grid.set(new Tile(x, y, (int) (Math.random() * (5))), x, y);
+                    b.grid.set(new Tile(x, y, (int) (Math.random() * (5))), y, x);
             }
-        }
-        for(int i = 0; i < playersCount; ++i){
-            int x = (int) (Math.random() * (width - 1));
-            int y = (int) (Math.random() * (height - 1));
         }
         return b;
     }

@@ -47,9 +47,10 @@ public class PlayState extends BasicGameState {
     public void init(GameContainer container, StateBasedGame game) throws SlickException {
         bgImage = context.resources().getImage("theme-bg");
         TileCalculator calculator = new HexCalculator(context.config().getTileSize());
-        boardPanel = new BoardPanel(new BoardDrawing(new BoardDrawer(calculator, new TileDrawer(calculator)), Board.getDefault(20,30,6), container.getScreenWidth(), container.getScreenHeight()));
+        Board board = Board.getDefault(20,30,6);
+        boardPanel = new BoardPanel(new BoardDrawing(new BoardDrawer(calculator, new TileDrawer(calculator)), board, container.getScreenWidth(), container.getScreenHeight()));
         boardPanel.init(container);
-        boardController = new BoardController();
+        boardController = new BoardController(board);
     }
 
     @Override

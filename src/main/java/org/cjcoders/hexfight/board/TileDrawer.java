@@ -8,6 +8,8 @@ import org.newdawn.slick.geom.Shape;
 import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.gui.GUIContext;
 
+import java.util.Random;
+
 /**
  * Created by mrakr_000 on 2014-05-21.
  */
@@ -40,7 +42,7 @@ public class TileDrawer {
             tileDrawing = tileDrawing.setNextLayer(new GridLines());
         }
         if(tile.isActive()){
-            tileDrawing = tileDrawing.setNextLayer(new ActiveLayer(tile.getOwner().getID()));
+            tileDrawing = tileDrawing.setNextLayer(new ActiveLayer());
         }
         if(!tile.getForces().isEmpty()){
             tileDrawing = tileDrawing.setNextLayer(new EnforcedTileLayer());
@@ -106,7 +108,7 @@ public class TileDrawer {
 
         @Override
         public void selfInit(TileDrawing drawing) {
-            font = context.resources().getFont("forces-squared", getTileSize()/3);
+            font = context.resources().getFont("forces-squared", getTileSize()/2);
         }
 
         @Override
@@ -138,14 +140,17 @@ public class TileDrawer {
 
     private class ActiveLayer extends TileDrawingLayer {
         private final SpriteSheet tileImg;
+        int i;
 
-        public ActiveLayer(int num){
+        public ActiveLayer(){
             tileImg = new SpriteSheet(Context.getInstance().resources().getImage("units"),70,70);
+            i = new Random().nextInt(6);
         }
 
         @Override
         protected void selfRender(TileDrawing tileDrawing, GUIContext container, Graphics g, int xOffset, int yOffset) {
-            Image img = tileImg.getSubImage(tileDrawing.getTile().getOwner().getID(),0);
+
+            Image img = tileImg.getSubImage(i,0);
             int x = tileDrawing.getCenterX() - img.getWidth()/2 + xOffset;
             int y = tileDrawing.getCenterY() - img.getHeight()/2 + yOffset;
             g.drawImage(img, x, y);
