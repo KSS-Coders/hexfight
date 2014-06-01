@@ -1,5 +1,7 @@
 package org.cjcoders.hexfight.board;
 
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 import org.cjcoders.hexfight.utils.Point;
 import org.cjcoders.hexfight.utils.TileCalculator;
 
@@ -11,17 +13,21 @@ import java.util.HashSet;
  */
 public class BoardDrawer {
 
+    private Logger l = Logger.getLogger(this.getClass());
+
     private final TileCalculator tileCalculator;
     private final TileDrawer tileDrawer;
 
     public BoardDrawer(TileCalculator tileCalculator, TileDrawer tileDrawer) {
         this.tileCalculator = tileCalculator;
         this.tileDrawer = tileDrawer;
+        l.setLevel(Level.DEBUG);
     }
 
     public Collection<TileDrawing> getDrawing(Board board){
         Collection<TileDrawing> result = new HashSet<>();
         for(Tile tile : board.getGrid()) {
+            l.debug("Adding TileDrawing [" + tile.getX() + ", " + tile.getY()+ "]");
             result.add(new TileDrawing(tileDrawer, tile));
         }
         return result;

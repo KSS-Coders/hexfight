@@ -19,7 +19,7 @@ import java.io.IOException;
  */
 public class GameCore extends StateBasedGame{
 
-    public static final String GAME_TITLE = "cubic";
+    public static final String GAME_TITLE = "Hexed";
 
     private Context context;
 
@@ -48,10 +48,11 @@ public class GameCore extends StateBasedGame{
     }
 
     public static void main(String args[]) throws SlickException {
+        BasicConfigurator.configure();
         GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
         int width = gd.getDisplayMode().getWidth();
         int height = gd.getDisplayMode().getHeight();
-        AppGameContainer app = new AppGameContainer(new GameCore("Hexfight"));
+        AppGameContainer app = new AppGameContainer(new GameCore(GAME_TITLE));
         app.setDisplayMode(width, height, true);
         app.setShowFPS(false);
         app.setTargetFrameRate(60);

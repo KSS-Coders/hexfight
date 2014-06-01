@@ -1,7 +1,10 @@
 package org.cjcoders.hexfight.board;
 
+import org.cjcoders.hexfight.utils.Profiler;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.gui.GUIContext;
+
+import java.util.Collection;
 
 /**
  * Created by mrakr_000 on 2014-05-22.
@@ -15,18 +18,17 @@ public class TileDrawing implements TileListener {
     }
 
     private Tile tile;
-    private TileDrawingLayer firstLayer;
+    private Collection<TileDrawingLayer> layers;
 
     public TileDrawing(TileDrawer drawer, Tile tile) {
         this.drawer = drawer;
         this.tile = tile;
-        firstLayer = drawer.getDrawing(tile);
-        firstLayer.init(this);
+        update(tile);
         tile.addListener(this);
     }
 
     public void render(GUIContext container, Graphics g, int xOffset, int yOffset) {
-        firstLayer.render(this, container, g, xOffset, yOffset);
+        for(TileDrawingLayer layer : layers) layer.render(this, container, g, xOffset, yOffset);
     }
 
     public int getX(){
@@ -50,7 +52,12 @@ public class TileDrawing implements TileListener {
 
     @Override
     public void update(Tile tile) {
-        firstLayer = drawer.getDrawing(tile);
-        firstLayer.init(this);
+        Profiler p = new Profiler("TileDrawing", Profiler.MICROS);
+        p.start();
+        layers = drawer.getDrawing(tile);
+        p.log("Get drawing");
+        //for(TileDrawingLayer layer : layers) layer.init(this);
+        p.log("Init drawing");
+        p.logFromStart("Whole method");
     }
 }

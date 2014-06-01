@@ -1,5 +1,8 @@
 package org.cjcoders.hexfight.context.resources;
 
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+import org.apache.log4j.lf5.LogLevel;
 import org.cjcoders.hexfight.context.Context;
 import org.cjcoders.hexfight.context.config.ConfigReader;
 import org.newdawn.slick.*;
@@ -16,6 +19,8 @@ import java.util.*;
  */
 public class ResourcesContainer {
 
+    private Logger l = Logger.getLogger(this.getClass());
+
     private Dimension resolution;
     private String theme;
     private Set<ResourcesFileReader> resourcesFileReaders;
@@ -23,6 +28,7 @@ public class ResourcesContainer {
 
     public ResourcesContainer() {
         this.resourcesFileReaders = new HashSet<>();
+        if(!l.isTraceEnabled()) l.setLevel(Level.TRACE);
     }
 
     public void useConfigReader(ConfigReader configReader){
@@ -33,6 +39,7 @@ public class ResourcesContainer {
     }
 
     public void reload() throws IOException, SlickException, FontFormatException {
+        l.info("Reloading resources...");
         for(ResourcesFileReader resourcesFileReader : resourcesFileReaders){
             reloadImages(resourcesFileReader);
             reloadFonts(resourcesFileReader);
@@ -41,6 +48,7 @@ public class ResourcesContainer {
     }
 
     private void reloadConfig(ResourcesFileReader resourcesFileReader) throws IOException {
+        l.info("Reloading resources...");
         if(usesConfigReader()){
             configReader.read(resourcesFileReader.getConfigs());
         }
@@ -48,6 +56,7 @@ public class ResourcesContainer {
 
     private void reloadFonts(ResourcesFileReader resourcesFileReader) throws IOException, FontFormatException {
         Collection<Resource> fonts = resourcesFileReader.getFonts();
+        l.info("Reloading fonts...");
         for(Resource font : fonts){
             Resources.get().fonts.load(font.ref, font.path);
         }
@@ -55,7 +64,9 @@ public class ResourcesContainer {
 
     private void reloadImages(ResourcesFileReader resourcesFileReader) throws IOException, SlickException {
         Collection<Resource> images = resourcesFileReader.getImages(resolution, theme);
+        l.info("Reloading images...");
         for(Resource img : images){
+            l.trace("Loading image : " + img);
             Resources.get().images.load(img.ref, img.path);
         }
     }

@@ -30,7 +30,6 @@ public class HexCalculator implements TileCalculator {
     @Override
     public boolean isNearby(Point firstPoint, Point secondPoint) {
         return distCalculate(firstPoint, secondPoint) == 1;
-
     }
 
     @Override

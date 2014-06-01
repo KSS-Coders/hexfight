@@ -1,5 +1,6 @@
 package org.cjcoders.hexfight.game.states;
 
+import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.cjcoders.hexfight.board.*;
 import org.cjcoders.hexfight.context.Context;
@@ -45,11 +46,22 @@ public class PlayState extends BasicGameState {
 
     @Override
     public void init(GameContainer container, StateBasedGame game) throws SlickException {
+        l.setLevel(Level.DEBUG);
+        l.debug("Initializing PlayState");
         bgImage = context.resources().getImage("theme-bg");
         TileCalculator calculator = new HexCalculator(context.config().getTileSize());
         Board board = Board.getDefault(20,30,6);
-        boardPanel = new BoardPanel(new BoardDrawing(new BoardDrawer(calculator, new TileDrawer(calculator)), board, container.getScreenWidth(), container.getScreenHeight()));
+        l.debug("New TileDrawer");
+        TileDrawer td = new TileDrawer(calculator);
+        l.debug("New BoardDrawer");
+        BoardDrawer bd = new BoardDrawer(calculator, td);
+        l.debug("New BoardDrawing");
+        BoardDrawing bdg = new BoardDrawing(bd, board, container.getScreenWidth(), container.getScreenHeight());
+        l.debug("New BoardPanel");
+        boardPanel = new BoardPanel(bdg);
+        l.debug("BoardPanel Init");
         boardPanel.init(container);
+        l.debug("new BoardController");
         boardController = new BoardController(board);
     }
 

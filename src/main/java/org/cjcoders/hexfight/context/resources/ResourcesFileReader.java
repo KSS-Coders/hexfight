@@ -53,7 +53,7 @@ public class ResourcesFileReader {
         String path = n.getAttribute("path");
         String name = "config";
         Resource r = new Resource(name, path);
-        log.trace("Loading config: " + r);
+        log.trace("Reading config attributes: " + r);
         return r;
     }
 
@@ -81,7 +81,7 @@ public class ResourcesFileReader {
         String path = basePath + "/" + e.getAttribute("path");
         String name = e.getAttribute("name");
         Resource r = new Resource(name, path);
-        log.trace("Loading font: " + r);
+        log.trace("Reading font attributes: " + r);
         return r;
     }
 
@@ -115,7 +115,7 @@ public class ResourcesFileReader {
         String bgName = "theme-bg";
         String path = "images/themes/" + themeE.getAttribute("name") + "/" + getImgPathWithResolution(bgE, resolution);
         Resource r = new Resource(bgName, path);
-        log.trace("Loading theme bg: " + r);
+        log.trace("Reading theme bg attributes: " + r);
         return r;
     }
 
@@ -129,7 +129,7 @@ public class ResourcesFileReader {
         String bgName = "tiles";
         String path = "images/themes/" + themeE.getAttribute("name") + "/" + tilesE.getAttribute("path");
         Resource r = new Resource(bgName, path);
-        log.trace("Loading tiles: " + r);
+        log.trace("Reading tiles attributes: " + r);
         return r;
     }
 
@@ -148,7 +148,7 @@ public class ResourcesFileReader {
         String path = basePath + "/" + e.getAttribute("path");
         String name = e.getAttribute("name");
         Resource r = new Resource(name, path);
-        log.trace("Loading img: " + r);
+        log.trace("Reading image attributes: " + r);
         return r;
     }
 
@@ -156,7 +156,7 @@ public class ResourcesFileReader {
         String path = basePath + "/" + getImgPathWithResolution(e, resolution);
         String name = e.getAttribute("name");
         Resource r = new Resource(name, path);
-        log.trace("Loading img: " + r);
+        log.trace("Reading scalable image attributes: " + r);
         return r;
     }
 
