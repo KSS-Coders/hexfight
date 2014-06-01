@@ -1,5 +1,6 @@
 package org.cjcoders.hexfight.board;
 
+import org.apache.log4j.Logger;
 import org.cjcoders.hexfight.context.Context;
 import org.cjcoders.hexfight.game.Player;
 import org.cjcoders.hexfight.utils.Profiler;
@@ -16,10 +17,11 @@ import java.util.*;
  */
 public class TileDrawer {
 
+    private Logger l = Logger.getLogger(this.getClass());
+
     private static final Color[] colors = new Color[]{Color.blue, Color.green, Color.red, Color.yellow, Color.darkGray, Color.cyan};
 
     private Context context;
-    private SpriteSheet tiles;
     private TileCalculator calculator;
     private boolean showGrid = true;
 
@@ -33,15 +35,21 @@ public class TileDrawer {
     public TileDrawer(TileCalculator calculator) {
         this.calculator = calculator;
         this.context = Context.getInstance();
-        Image tiles = context.resources().getImage("tiles");
-        this.tiles = new SpriteSheet(tiles, tiles.getHeight(), tiles.getHeight());
+        Image tilesImg = context.resources().getImage("tiles");
+        SpriteSheet tiles = new SpriteSheet(tilesImg, tilesImg.getHeight(), tilesImg.getHeight());
+        Image unitsImg = context.resources().getImage("units");
+        SpriteSheet unitsSs = new SpriteSheet(unitsImg, unitsImg.getHeight(), unitsImg.getHeight());
         GRID_LAYER = new GridLines();
         ACTIVE_LAYER = new ActiveLayer();
         OWNED_LAYER = new OwnedTileLayer();
         FORCES_LAYER = new EnforcedTileLayer();
-        locations = new TileDrawingLayer[tiles.getWidth()];
-        for(int i = 0; i < this.tiles.getHorizontalCount(); ++i){
-            locations[i] = new LocationLayer(this.tiles.getSubImage(i, 0));
+        locations = new TileDrawingLayer[tiles.getHorizontalCount()];
+        for(int i = 0; i < tiles.getHorizontalCount(); ++i){
+            locations[i] = new LocationLayer(tiles.getSubImage(i, 0));
+        }
+        units = new TileDrawingLayer[unitsSs.getHorizontalCount()];
+        for(int i = 0; i < unitsSs.getHorizontalCount(); ++i){
+            units[i] = new UnitLayer(unitsSs.getSubImage(i, 0));
         }
     }
 
@@ -50,7 +58,8 @@ public class TileDrawer {
         p.start();
         Collection<TileDrawingLayer> tileDrawing = new ArrayList<>(10);
         p.log("Create array");
-        if(tile.getTileNo() < tiles.getHorizontalCount()){
+        if(tile.getTileNo() < locations.length){
+            l.debug("Adding " + tile.getTileNo());
             tileDrawing.add(locations[tile.getTileNo()]);
             p.log("Add location");
         }
@@ -98,8 +107,24 @@ public class TileDrawer {
         return getY(x, y) + calculator.getTileSize()/2;
     }
 
+    private class UnitLayer extends TileDrawingLayer{
+
+        private final Image unitImg;
+
+        public UnitLayer(Image unitImg){
+            this.unitImg = unitImg;
+        }
+
+        @Override
+        public void render(TileDrawing tileDrawing, GUIContext container, Graphics g, int xOffset, int yOffset) {
+            int x = tileDrawing.getCenterX() - unitImg.getWidth()/2 + xOffset;
+            int y = tileDrawing.getCenterY() - unitImg.getHeight()/2 + yOffset;
+            g.drawImage(unitImg, x, y);
+        }
+    }
+
     private class OwnedTileLayer extends TileDrawingLayer {
-        private Image border;
+        private final Image border;
 
         private OwnedTileLayer() {
             this.border = context.resources().getImage("hex-border");
@@ -122,12 +147,12 @@ public class TileDrawer {
         public void render(TileDrawing tileDrawing, GUIContext container, Graphics g, int xOffset, int yOffset) {
             int x = tileDrawing.getCenterX() - tileImg.getWidth()/2 + xOffset;
             int y = tileDrawing.getCenterY() - tileImg.getHeight()/2 + yOffset;
-            g.drawImage(tileImg, x+1, y+1);
+            g.drawImage(tileImg, x, y);
         }
     }
 
     private class EnforcedTileLayer extends TileDrawingLayer {
-        private Font font;
+        private final Font font;
 
         public EnforcedTileLayer() {
             font = context.resources().getFont("forces-squared", getTileSize()/2);

@@ -28,7 +28,9 @@ public class TileDrawing implements TileListener {
     }
 
     public void render(GUIContext container, Graphics g, int xOffset, int yOffset) {
-        for(TileDrawingLayer layer : layers) layer.render(this, container, g, xOffset, yOffset);
+        for(TileDrawingLayer layer : layers) {
+            layer.render(this, container, g, xOffset, yOffset);
+        }
     }
 
     public int getX(){
