@@ -18,8 +18,10 @@ public class BoardController {
         this.board = board;
     }
 
-    public void tileClicked(Point p) {
+    public void tileClicked(Point p, GUICallback callback) {
         l.info("Tile " + p + " clicked");
         board.getGrid().get(p.y, p.x).switchActive();
+        int i = callback.askForInt("Get int", 0, 10);
+        l.info("Obtained i : " + i);
     }
 }

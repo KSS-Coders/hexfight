@@ -1,9 +1,13 @@
 package org.cjcoders.hexfight.board;
 
 import org.apache.log4j.Logger;
+import org.cjcoders.hexfight.game.GUICallback;
+import org.cjcoders.hexfight.game.GUIRequest;
 import org.cjcoders.hexfight.utils.Point;
+import org.cjcoders.hexfight.utils.components.DialogBox;
 import org.newdawn.slick.*;
 import org.newdawn.slick.gui.GUIContext;
+import org.newdawn.slick.opengl.InternalTextureLoader;
 
 /**
  * Created by mrakr_000 on 2014-05-15.
@@ -28,12 +32,17 @@ public class BoardPanel {
         yOffset = boardDrawing.getCenteredOffsetY();
     }
 
+    public Point getOffset(){
+        return new Point(xOffset, yOffset);
+    }
+
     public void update(GUIContext container){
         boardDrawing.setVisibleSize(container.getScreenWidth(), container.getScreenHeight());
     }
 
     public void render(GUIContext container, Graphics g){
         boardDrawing.render(container, g, xOffset, yOffset);
+
     }
 
     private boolean shouldUpdateXOffset(int dx){
@@ -60,7 +69,6 @@ public class BoardPanel {
     public void updateOffset(int dx, int dy){
         if(shouldUpdateXOffset(dx)) setXOffset(xOffset + dx);
         if(shouldUpdateYOffset(dy)) setYOffset(yOffset + dy);
-
     }
     public void setXOffset(int x){
         if(shouldChangeXOffset(x)){

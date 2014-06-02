@@ -5,9 +5,12 @@ import org.apache.log4j.Logger;
 import org.cjcoders.hexfight.board.*;
 import org.cjcoders.hexfight.context.Context;
 import org.cjcoders.hexfight.game.BoardController;
+import org.cjcoders.hexfight.game.GUICallback;
+import org.cjcoders.hexfight.game.GUIRequest;
 import org.cjcoders.hexfight.utils.HexCalculator;
 import org.cjcoders.hexfight.utils.Point;
 import org.cjcoders.hexfight.utils.TileCalculator;
+import org.cjcoders.hexfight.utils.components.DialogBox;
 import org.newdawn.slick.*;
 import org.newdawn.slick.imageout.ImageIOWriter;
 import org.newdawn.slick.state.BasicGameState;
@@ -31,12 +34,25 @@ public class PlayState extends BasicGameState {
     private BoardPanel boardPanel;
     private BoardController boardController;
 
+    private DialogBox dialog;
+
+    private boolean leftMouseButtonClicked;
+    private Point leftMouseButtonClikcCoordinates;
+
     private int currentPlayer = 0;
     private int nextPlayer(){return currentPlayer++; }
 
 
     public PlayState() {
         this.context = Context.getInstance();
+    }
+
+
+    public void showDialog(DialogBox dialog){
+        this.dialog = dialog;
+    }
+    public void cleanDialog(){
+        this.dialog = null;
     }
 
     @Override
@@ -69,10 +85,13 @@ public class PlayState extends BasicGameState {
     public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
         g.drawImage(bgImage, 0, 0);
         boardPanel.render(container, g);
+        if(dialog != null && dialog.isInitialized()){
+            dialog.render(container, g);
+        }
     }
 
     @Override
-    public void update(GameContainer container, StateBasedGame game, int delta) throws SlickException {
+    public void update(final GameContainer container, final StateBasedGame game, int delta) throws SlickException {
         boardPanel.update(container);
         Input input = container.getInput();
         if(input.isKeyDown(Input.KEY_ESCAPE)){
@@ -87,13 +106,26 @@ public class PlayState extends BasicGameState {
                 l.error("Could not make screen shot");
             }
         }
+        if(dialog != null && !dialog.isInitialized()){
+            dialog.init(container, game, getID(), 200, 200);
+        }
+        if(leftMouseButtonClicked){
+            final Point p = boardPanel.getBoardCooridnates(leftMouseButtonClikcCoordinates.x, leftMouseButtonClikcCoordinates.y);
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    boardController.tileClicked(p, new BoardGUICallback(leftMouseButtonClikcCoordinates));
+                }
+            }).start();
+            leftMouseButtonClicked = false;
+        }
     }
 
     @Override
     public void mouseClicked(int button, int mx, int my, int clickCount) {
-        if(button == Input.MOUSE_LEFT_BUTTON){
-            Point p = boardPanel.getBoardCooridnates(mx, my);
-            boardController.tileClicked(p);
+        if(button == Input.MOUSE_LEFT_BUTTON && dialog == null){
+            leftMouseButtonClicked = true;
+            leftMouseButtonClikcCoordinates = new Point(mx, my);
         }
     }
 
@@ -101,7 +133,13 @@ public class PlayState extends BasicGameState {
     public void mouseDragged(int oldx, int oldy, int newx, int newy) {
         int dx = newx - oldx;
         int dy = newy - oldy;
+        Point o1 = boardPanel.getOffset();
         boardPanel.updateOffset(dx, dy);
+        if(dialog != null){
+            Point o2 = boardPanel.getOffset();
+            Point diff = o2.add(o1.negative());
+            dialog.updateOffset(diff.x,diff.y);
+        }
     }
 
     private void saveScreenshot(GameContainer container) throws IOException, SlickException {
@@ -117,5 +155,38 @@ public class PlayState extends BasicGameState {
         return screenShot;
     }
 
+
+    private class BoardGUICallback implements GUICallback {
+
+        private Point clickCoordinates;
+
+        private BoardGUICallback(Point clickCoordinates) {
+            this.clickCoordinates = clickCoordinates;
+        }
+
+        @Override
+        public Integer askForInt(String msg, Integer max, Integer min) {
+            DialogBox dialog = null;
+            try {
+                dialog = new DialogBox(msg, clickCoordinates.x, clickCoordinates.y);
+            } catch (SlickException e) {
+                e.printStackTrace();
+            }
+            GUIRequest<Integer> request = dialog.getRequest();
+            showDialog(dialog);
+            try {
+                request.blockUntilFinished();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            cleanDialog();
+            return request.getResult();
+        }
+
+        @Override
+        public Point getClickCoordinates() {
+            return clickCoordinates;
+        }
+    }
 
 }
