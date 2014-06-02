@@ -165,10 +165,10 @@ public class PlayState extends BasicGameState {
         }
 
         @Override
-        public Integer askForInt(String msg, Integer max, Integer min) {
+        public Integer askForInt(String msg, Integer min, Integer max) {
             DialogBox dialog = null;
             try {
-                dialog = new DialogBox(msg, clickCoordinates.x, clickCoordinates.y);
+                dialog = new DialogBox(msg, clickCoordinates.x, clickCoordinates.y, min, max);
             } catch (SlickException e) {
                 e.printStackTrace();
             }
