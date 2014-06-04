@@ -1,7 +1,9 @@
 package org.cjcoders.hexfight.utils;
 
 import org.apache.log4j.Logger;
+import org.cjcoders.hexfight.board.Hexagon;
 import org.cjcoders.hexfight.board.Tile;
+import org.newdawn.slick.geom.Shape;
 
 /**
  * Created by Max on 2014-05-05.
@@ -70,6 +72,11 @@ public class HexCalculator implements TileCalculator {
             }
         }
         return new Point(i0, j0);
+    }
+
+    @Override
+    public Shape getShape(int x, int y) {
+        return new Hexagon(getTileSize(),x,y);
     }
 
     @Override

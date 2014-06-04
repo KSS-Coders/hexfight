@@ -2,6 +2,7 @@ package org.cjcoders.hexfight.board;
 
 import org.cjcoders.hexfight.utils.Profiler;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.geom.Shape;
 import org.newdawn.slick.gui.GUIContext;
 
 import java.util.Collection;
@@ -25,6 +26,10 @@ public class TileDrawing implements TileListener {
         this.tile = tile;
         update(tile);
         tile.addListener(this);
+    }
+
+    public Shape getShape() {
+        return drawer.getShape(drawer.getX(tile.getX(), tile.getY()), drawer.getY(tile.getX(), tile.getY()));
     }
 
     public void render(GUIContext container, Graphics g, int xOffset, int yOffset) {

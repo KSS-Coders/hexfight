@@ -3,6 +3,7 @@ package org.cjcoders.hexfight.game.states;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.cjcoders.hexfight.board.*;
+import org.cjcoders.hexfight.utils.components.DraggableContainer;
 import org.cjcoders.hexfight.context.Context;
 import org.cjcoders.hexfight.game.BoardController;
 import org.cjcoders.hexfight.game.GUICallback;
@@ -11,6 +12,7 @@ import org.cjcoders.hexfight.utils.HexCalculator;
 import org.cjcoders.hexfight.utils.Point;
 import org.cjcoders.hexfight.utils.TileCalculator;
 import org.cjcoders.hexfight.utils.components.DialogBox;
+import org.cjcoders.hexfight.utils.components.DraggableContent;
 import org.newdawn.slick.*;
 import org.newdawn.slick.imageout.ImageIOWriter;
 import org.newdawn.slick.state.BasicGameState;
@@ -31,13 +33,14 @@ public class PlayState extends BasicGameState {
 
     private Image bgImage;
     private Context context;
-    private BoardPanel boardPanel;
+    private DraggableContainer boardPanel;
     private BoardController boardController;
+    private BoardDrawer boardDrawer;
 
     private DialogBox dialog;
 
     private boolean leftMouseButtonClicked;
-    private Point leftMouseButtonClikcCoordinates;
+    private Point leftMouseButtonClickCoordinates;
 
     private int currentPlayer = 0;
     private int nextPlayer(){return currentPlayer++; }
@@ -66,25 +69,27 @@ public class PlayState extends BasicGameState {
         l.debug("Initializing PlayState");
         bgImage = context.resources().getImage("theme-bg");
         TileCalculator calculator = new HexCalculator(context.config().getTileSize());
-        Board board = Board.getDefault(20,30,6);
+        Board board = Board.getDefault(20,29,6);
         l.debug("New TileDrawer");
         TileDrawer td = new TileDrawer(calculator);
         l.debug("New BoardDrawer");
-        BoardDrawer bd = new BoardDrawer(calculator, td);
+        boardDrawer = new BoardDrawer(calculator, td);
         l.debug("New BoardDrawing");
-        BoardDrawing bdg = new BoardDrawing(bd, board, container.getScreenWidth(), container.getScreenHeight());
+        DraggableContent bdg = new BoardDrawing(boardDrawer, board);
         l.debug("New BoardPanel");
-        boardPanel = new BoardPanel(bdg);
+        boardPanel = new DraggableContainer(0, 0, container.getScreenWidth(), container.getScreenHeight(), bdg);
         l.debug("BoardPanel Init");
-        boardPanel.init(container);
+        boardPanel.init(container, game);
         l.debug("new BoardController");
         boardController = new BoardController(board);
+        boardPanel.setPaddingX(50);
+        boardPanel.setPaddingY(50);
     }
 
     @Override
     public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
         g.drawImage(bgImage, 0, 0);
-        boardPanel.render(container, g);
+        boardPanel.render(container, game, g);
         if(dialog != null && dialog.isInitialized()){
             dialog.render(container, g);
         }
@@ -92,7 +97,7 @@ public class PlayState extends BasicGameState {
 
     @Override
     public void update(final GameContainer container, final StateBasedGame game, int delta) throws SlickException {
-        boardPanel.update(container);
+        boardPanel.update(container, game, delta);
         Input input = container.getInput();
         if(input.isKeyDown(Input.KEY_ESCAPE)){
             game.enterState(State.PAUSE.getCode(),new EmptyTransition(), new VerticalSplitTransition());
@@ -110,11 +115,12 @@ public class PlayState extends BasicGameState {
             dialog.init(container, game, getID(), 200, 200);
         }
         if(leftMouseButtonClicked){
-            final Point p = boardPanel.getBoardCooridnates(leftMouseButtonClikcCoordinates.x, leftMouseButtonClikcCoordinates.y);
+            final Point p = boardPanel.getAbsoluteCooridnates(leftMouseButtonClickCoordinates.x, leftMouseButtonClickCoordinates.y);
+            final Point p1 = boardDrawer.getBoardCooridnates(p.x,p.y);
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    boardController.tileClicked(p, new BoardGUICallback(leftMouseButtonClikcCoordinates));
+                    boardController.tileClicked(p1, new BoardGUICallback(leftMouseButtonClickCoordinates));
                 }
             }).start();
             leftMouseButtonClicked = false;
@@ -125,7 +131,7 @@ public class PlayState extends BasicGameState {
     public void mouseClicked(int button, int mx, int my, int clickCount) {
         if(button == Input.MOUSE_LEFT_BUTTON && dialog == null){
             leftMouseButtonClicked = true;
-            leftMouseButtonClikcCoordinates = new Point(mx, my);
+            leftMouseButtonClickCoordinates = new Point(mx, my);
         }
     }
 
@@ -134,11 +140,11 @@ public class PlayState extends BasicGameState {
         int dx = newx - oldx;
         int dy = newy - oldy;
         Point o1 = boardPanel.getOffset();
-        boardPanel.updateOffset(dx, dy);
+        boardPanel.drag(dx, dy);
         if(dialog != null){
             Point o2 = boardPanel.getOffset();
             Point diff = o2.add(o1.negative());
-            dialog.updateOffset(diff.x,diff.y);
+            dialog.updateOffset(diff.x, diff.y);
         }
     }
 

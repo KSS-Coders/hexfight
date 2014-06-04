@@ -32,6 +32,10 @@ public class TileDrawer {
     private final TileDrawingLayer OWNED_LAYER;
     private final TileDrawingLayer FORCES_LAYER;
 
+    public Shape getShape(int x, int y) {
+        return calculator.getShape(x, y);
+    }
+
     public TileDrawer(TileCalculator calculator) {
         this.calculator = calculator;
         this.context = Context.getInstance();
@@ -117,8 +121,8 @@ public class TileDrawer {
 
         @Override
         public void render(TileDrawing tileDrawing, GUIContext container, Graphics g, int xOffset, int yOffset) {
-            int x = tileDrawing.getCenterX() - unitImg.getWidth()/2 + xOffset;
-            int y = tileDrawing.getCenterY() - unitImg.getHeight()/2 + yOffset;
+            int x = tileDrawing.getCenterX() - unitImg.getWidth()/2 - xOffset;
+            int y = tileDrawing.getCenterY() - unitImg.getHeight()/2 - yOffset;
             g.drawImage(unitImg, x, y);
         }
     }
@@ -132,7 +136,7 @@ public class TileDrawer {
 
         @Override
         public void render(TileDrawing tileDrawing, GUIContext container, Graphics g, int xOffset, int yOffset) {
-            g.drawImage(border, tileDrawing.getX() + xOffset, tileDrawing.getY() + yOffset, playerColor(tileDrawing.getTile().getOwner()));
+            g.drawImage(border, tileDrawing.getX() - xOffset, tileDrawing.getY() - yOffset, playerColor(tileDrawing.getTile().getOwner()));
         }
     }
 
@@ -145,8 +149,8 @@ public class TileDrawer {
 
         @Override
         public void render(TileDrawing tileDrawing, GUIContext container, Graphics g, int xOffset, int yOffset) {
-            int x = tileDrawing.getCenterX() - tileImg.getWidth()/2 + xOffset;
-            int y = tileDrawing.getCenterY() - tileImg.getHeight()/2 + yOffset;
+            int x = tileDrawing.getCenterX() - tileImg.getWidth()/2 - xOffset;
+            int y = tileDrawing.getCenterY() - tileImg.getHeight()/2 - yOffset;
             g.drawImage(tileImg, x, y);
         }
     }
@@ -161,8 +165,8 @@ public class TileDrawer {
         @Override
         public void render(TileDrawing tileDrawing, GUIContext container, Graphics g, int xOffset, int yOffset) {
             String s = "" + tileDrawing.getTile().getForces().getStrength();
-            int x = tileDrawing.getX() + (getTileSize() - font.getWidth(s))/2 + xOffset;
-            int y = tileDrawing.getY() + (getTileSize() - font.getHeight(s))/2 + yOffset;
+            int x = tileDrawing.getX() + (getTileSize() - font.getWidth(s))/2 - xOffset;
+            int y = tileDrawing.getY() + (getTileSize() - font.getHeight(s))/2 - yOffset;
             font.drawString(x, y, s);
         }
     }
@@ -170,7 +174,7 @@ public class TileDrawer {
     private class GridLines extends TileDrawingLayer {
         @Override
         public void render(TileDrawing drawing, GUIContext container, Graphics g, int xOffset, int yOffset) {
-            Shape shape = new Hexagon(drawing.getSize(), drawing.getX() + xOffset, drawing.getY() + yOffset);
+            Shape shape = new Hexagon(drawing.getSize(), drawing.getX() - xOffset, drawing.getY() - yOffset);
             g.draw(shape, new ShapeFill() {
                 @Override
                 public Color colorAt(Shape shape, float x, float y) {
@@ -197,8 +201,8 @@ public class TileDrawer {
         @Override
         public void render(TileDrawing tileDrawing, GUIContext container, Graphics g, int xOffset, int yOffset) {
             Image img = tileImg.getSubImage(i,0);
-            int x = tileDrawing.getCenterX() - img.getWidth()/2 + xOffset;
-            int y = tileDrawing.getCenterY() - img.getHeight()/2 + yOffset;
+            int x = tileDrawing.getCenterX() - img.getWidth()/2 - xOffset;
+            int y = tileDrawing.getCenterY() - img.getHeight()/2 - yOffset;
             g.drawImage(img, x, y);
         }
     }

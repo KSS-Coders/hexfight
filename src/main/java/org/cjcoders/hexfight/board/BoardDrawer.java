@@ -27,22 +27,22 @@ public class BoardDrawer {
     public Collection<TileDrawing> getDrawing(Board board){
         Collection<TileDrawing> result = new HashSet<>();
         for(Tile tile : board.getGrid()) {
-            l.debug("Adding TileDrawing [" + tile.getX() + ", " + tile.getY()+ "]");
+
             result.add(new TileDrawing(tileDrawer, tile));
         }
         return result;
     }
 
-    public Point getTileCooridnates(int x, int y) {
+    public Point getBoardCooridnates(int x, int y) {
         return tileCalculator.getBorardCoordinates(x, y);
     }
 
     public int getBoardHeight(int rows, int cols) {
-        return tileCalculator.getScreenYFor(rows, cols) + tileCalculator.getTileSize();
+        return tileCalculator.getScreenYFor(rows-1, cols-1) + tileCalculator.getTileSize();
     }
 
     public int getBoardWidth(int rows, int cols){
-        return tileCalculator.getScreenXFor(rows, cols) + tileCalculator.getTileSize();
+        return tileCalculator.getScreenXFor(rows-1, cols-1) + tileCalculator.getTileSize();
     }
 
 }
