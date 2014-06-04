@@ -3,6 +3,7 @@ package org.cjcoders.hexfight.game.states;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.cjcoders.hexfight.board.*;
+import org.cjcoders.hexfight.utils.components.Content;
 import org.cjcoders.hexfight.utils.components.DraggableContainer;
 import org.cjcoders.hexfight.context.Context;
 import org.cjcoders.hexfight.game.BoardController;
@@ -12,7 +13,7 @@ import org.cjcoders.hexfight.utils.HexCalculator;
 import org.cjcoders.hexfight.utils.Point;
 import org.cjcoders.hexfight.utils.TileCalculator;
 import org.cjcoders.hexfight.utils.components.DialogBox;
-import org.cjcoders.hexfight.utils.components.DraggableContent;
+import org.cjcoders.hexfight.utils.components.ImageContent;
 import org.newdawn.slick.*;
 import org.newdawn.slick.imageout.ImageIOWriter;
 import org.newdawn.slick.state.BasicGameState;
@@ -31,8 +32,6 @@ public class PlayState extends BasicGameState {
 
     private Logger l = Logger.getLogger(this.getClass());
 
-    private Image bgImage;
-    private Context context;
     private DraggableContainer boardPanel;
     private BoardController boardController;
     private BoardDrawer boardDrawer;
@@ -47,7 +46,17 @@ public class PlayState extends BasicGameState {
 
 
     public PlayState() {
-        this.context = Context.getInstance();
+        l.setLevel(Level.DEBUG);
+        Context context = Context.getInstance();
+        Image bgImage = context.resources().getImage("theme-bg");
+        TileCalculator calculator = new HexCalculator(context.config().getTileSize());
+        Board board = Board.getDefault(20,29,6);
+        MainTileDrawer td = new MainTileDrawer(calculator);
+        boardDrawer = new BoardDrawer(calculator, td);
+        Content bdg = new BoardDrawing(boardDrawer, board);
+        boardPanel = new DraggableContainer(0, 0, 0, 0, bdg);
+        boardController = new BoardController(board);
+        boardPanel.setBackground(new ImageContent(bgImage));
     }
 
 
@@ -65,30 +74,15 @@ public class PlayState extends BasicGameState {
 
     @Override
     public void init(GameContainer container, StateBasedGame game) throws SlickException {
-        l.setLevel(Level.DEBUG);
-        l.debug("Initializing PlayState");
-        bgImage = context.resources().getImage("theme-bg");
-        TileCalculator calculator = new HexCalculator(context.config().getTileSize());
-        Board board = Board.getDefault(20,29,6);
-        l.debug("New TileDrawer");
-        TileDrawer td = new TileDrawer(calculator);
-        l.debug("New BoardDrawer");
-        boardDrawer = new BoardDrawer(calculator, td);
-        l.debug("New BoardDrawing");
-        DraggableContent bdg = new BoardDrawing(boardDrawer, board);
-        l.debug("New BoardPanel");
-        boardPanel = new DraggableContainer(0, 0, container.getScreenWidth(), container.getScreenHeight(), bdg);
-        l.debug("BoardPanel Init");
-        boardPanel.init(container, game);
-        l.debug("new BoardController");
-        boardController = new BoardController(board);
+        boardPanel.setWidth(container.getScreenWidth());
+        boardPanel.setHeight(container.getScreenHeight());
         boardPanel.setPaddingX(50);
         boardPanel.setPaddingY(50);
+        boardPanel.init(container, game);
     }
 
     @Override
     public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
-        g.drawImage(bgImage, 0, 0);
         boardPanel.render(container, game, g);
         if(dialog != null && dialog.isInitialized()){
             dialog.render(container, g);

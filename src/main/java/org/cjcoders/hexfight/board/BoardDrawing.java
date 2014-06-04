@@ -1,7 +1,7 @@
 package org.cjcoders.hexfight.board;
 
 import org.apache.log4j.Logger;
-import org.cjcoders.hexfight.utils.components.DraggableContent;
+import org.cjcoders.hexfight.utils.components.Content;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Shape;
@@ -12,7 +12,7 @@ import java.util.Collection;
 /**
  * Created by mrakr_000 on 2014-05-28.
  */
-public class BoardDrawing implements DraggableContent {
+public class BoardDrawing implements Content {
 
     private Logger l = Logger.getLogger(this.getClass());
 
