@@ -59,11 +59,11 @@ public class TileDrawer {
 
     public Collection<TileDrawingLayer> getDrawing(Tile tile) {
         Profiler p = new Profiler("TileDrawer", Profiler.MICROS);
+        p.setEnabled(false);
         p.start();
         Collection<TileDrawingLayer> tileDrawing = new ArrayList<>(10);
         p.log("Create array");
         if(tile.getTileNo() < locations.length){
-            l.debug("Adding " + tile.getTileNo());
             tileDrawing.add(locations[tile.getTileNo()]);
             p.log("Add location");
         }

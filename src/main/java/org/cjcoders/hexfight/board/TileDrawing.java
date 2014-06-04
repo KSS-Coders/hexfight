@@ -60,6 +60,7 @@ public class TileDrawing implements TileListener {
     @Override
     public void update(Tile tile) {
         Profiler p = new Profiler("TileDrawing", Profiler.MICROS);
+        p.setEnabled(false);
         p.start();
         layers = drawer.getDrawing(tile);
         p.log("Get drawing");

@@ -15,10 +15,20 @@ public class Profiler {
     private Long lastMeasure;
     private Logger l;
     private int units;
+    private boolean enabled;
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
 
     public Profiler(String name, int units) {
         l = Logger.getLogger(name);
         this.units = units;
+        this.enabled = true;
     }
 
     public void start(){
@@ -27,17 +37,21 @@ public class Profiler {
     }
 
     public void log(String msg){
-        if(lastMeasure != null){
-            Long currentMeasure = System.nanoTime();
-            l.info(msg + " [measured : " + (currentMeasure - lastMeasure)/units + "]");
-            lastMeasure = currentMeasure;
+        if(isEnabled()) {
+            if (lastMeasure != null) {
+                Long currentMeasure = System.nanoTime();
+                l.info(msg + " [measured : " + (currentMeasure - lastMeasure) / units + "]");
+                lastMeasure = currentMeasure;
+            }
         }
     }
     public void logFromStart(String msg){
-        if(lastMeasure != null){
-            Long currentMeasure = System.nanoTime();
-            l.info(msg + " [measured : " + (currentMeasure - startTime)/units + "]");
-            lastMeasure = currentMeasure;
+        if(isEnabled()) {
+            if (lastMeasure != null) {
+                Long currentMeasure = System.nanoTime();
+                l.info(msg + " [measured : " + (currentMeasure - startTime) / units + "]");
+                lastMeasure = currentMeasure;
+            }
         }
     }
 }
