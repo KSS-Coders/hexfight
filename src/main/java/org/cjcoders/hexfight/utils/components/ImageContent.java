@@ -9,36 +9,16 @@ import org.newdawn.slick.gui.GUIContext;
 /**
 * Created by mrakr_000 on 2014-06-04.
 */
-public class ImageContent implements Content {
+public class ImageContent extends SimpleContent {
     private Image img;
 
     public ImageContent(Image img) {
+        super(img.getWidth(), img.getHeight());
         this.img = img;
     }
-
 
         @Override
     public void render(GUIContext container, Graphics g, Rectangle visibleArea) {
         g.drawImage(img, visibleArea.getX(), visibleArea.getY());
-    }
-
-    @Override
-    public int getWidth() {
-        return img.getWidth();
-    }
-
-    @Override
-    public int getHeight() {
-        return img.getHeight();
-    }
-
-    @Override
-    public int getCenterX() {
-        return img.getWidth()/2;
-    }
-
-    @Override
-    public int getCenterY() {
-        return img.getHeight()/2;
     }
 }
