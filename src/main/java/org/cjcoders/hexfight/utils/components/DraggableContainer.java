@@ -47,7 +47,6 @@ public class DraggableContainer extends PositionedGraphicComponent {
 
     public void setDrawing(Content drawing) {
         this.drawing = drawing;
-        l.info("Setting drawing");
         focusOn(drawing.getCenterX(), drawing.getCenterY());
     }
 

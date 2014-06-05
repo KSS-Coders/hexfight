@@ -159,7 +159,6 @@ public class PlayState extends BasicGameState {
         @Override
         public Integer askForInt(String msg, Integer min, Integer max) {
             GUIRequest<Integer> request = dialog.startRequest(msg, min, max);
-            l.info("pin dialog");
             boardPanel.pin(dialog, clickCoordinates.x, clickCoordinates.y);
             try {
                 request.blockUntilFinished();
