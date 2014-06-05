@@ -4,6 +4,7 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.cjcoders.hexfight.board.*;
 import org.cjcoders.hexfight.game.Player;
+import org.cjcoders.hexfight.utils.Profiler;
 import org.cjcoders.hexfight.utils.components.Content;
 import org.cjcoders.hexfight.utils.components.DraggableContainer;
 import org.cjcoders.hexfight.context.Context;
@@ -61,13 +62,6 @@ public class PlayState extends BasicGameState {
         boardController = new BoardController(board);
     }
 
-    public void showDialog(DialogBox dialog){
-        this.dialog = dialog;
-    }
-    public void cleanDialog(){
-        this.dialog = null;
-    }
-
     @Override
     public int getID() {
         return State.TURN.getCode();
@@ -83,14 +77,17 @@ public class PlayState extends BasicGameState {
         boardPanel.setPaddingY(50);
         boardPanel.setBackground(new ImageContent(bgImage));
         boardPanel.init(container, game);
+        dialog = new DialogBox(200, 200);
+        dialog.init(container, game, getID());
     }
 
     @Override
     public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
+        Profiler p = new Profiler(this.getClass().getName(), Profiler.MICROS);
+        p.start();
+        p.setEnabled(false);
         boardPanel.render(container, game, g);
-        if(dialog != null && dialog.isInitialized()){
-            dialog.render(container, g);
-        }
+        p.logFromStart("render");
     }
 
     @Override
@@ -109,9 +106,6 @@ public class PlayState extends BasicGameState {
                 l.error("Could not make screen shot");
             }
         }
-        if(dialog != null && !dialog.isInitialized()){
-            dialog.init(container, game, getID(), 200, 200);
-        }
         if(leftMouseButtonClicked){
             final Point p = boardPanel.getAbsoluteCooridnates(leftMouseButtonClickCoordinates.x, leftMouseButtonClickCoordinates.y);
             final Point p1 = boardDrawer.getBoardCooridnates(p.x,p.y);
@@ -127,7 +121,7 @@ public class PlayState extends BasicGameState {
 
     @Override
     public void mouseClicked(int button, int mx, int my, int clickCount) {
-        if(button == Input.MOUSE_LEFT_BUTTON && dialog == null){
+        if(button == Input.MOUSE_LEFT_BUTTON && !boardPanel.hasPinned()){
             leftMouseButtonClicked = true;
             leftMouseButtonClickCoordinates = new Point(mx, my);
         }
@@ -137,13 +131,7 @@ public class PlayState extends BasicGameState {
     public void mouseDragged(int oldx, int oldy, int newx, int newy) {
         int dx = newx - oldx;
         int dy = newy - oldy;
-        Point o1 = boardPanel.getOffset();
         boardPanel.drag(dx, dy);
-        if(dialog != null){
-            Point o2 = boardPanel.getOffset();
-            Point diff = o2.add(o1.negative());
-            dialog.updateOffset(diff.x, diff.y);
-        }
     }
 
     private void saveScreenshot(GameContainer container) throws IOException, SlickException {
@@ -170,20 +158,15 @@ public class PlayState extends BasicGameState {
 
         @Override
         public Integer askForInt(String msg, Integer min, Integer max) {
-            DialogBox dialog = null;
-            try {
-                dialog = new DialogBox(msg, clickCoordinates.x, clickCoordinates.y, min, max);
-            } catch (SlickException e) {
-                e.printStackTrace();
-            }
-            GUIRequest<Integer> request = dialog.getRequest();
-            showDialog(dialog);
+            GUIRequest<Integer> request = dialog.startRequest(msg, min, max);
+            l.info("pin dialog");
+            boardPanel.pin(dialog, clickCoordinates.x, clickCoordinates.y);
             try {
                 request.blockUntilFinished();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            cleanDialog();
+            boardPanel.unpin();
             return request.getResult();
         }
 

@@ -5,6 +5,7 @@ import org.cjcoders.hexfight.utils.Point;
 import org.newdawn.slick.Game;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.geom.Rectangle;
+import org.newdawn.slick.geom.Shape;
 import org.newdawn.slick.gui.GUIContext;
 
 /**
@@ -201,6 +202,56 @@ public class DraggableContainer extends PositionedGraphicComponent {
     }
 
     /*============================================
+        PINNED CONTENT
+     ===========================================*/
+    private Content pinnedContent;
+    private int pinX;
+    private int pinY;
+    private boolean isPinned;
+
+    public int getPinY() {
+        return pinY;
+    }
+
+    public void setPinY(int pinY) {
+        this.pinY = pinY;
+    }
+
+    public int getPinX() {
+        return pinX;
+    }
+
+    public void setPinX(int pinX) {
+        this.pinX = pinX;
+    }
+
+    public boolean hasPinned(){
+        return pinnedContent != null && isPinned;
+    }
+
+    public void pin(){
+        isPinned = true;
+    }
+
+    public void unpin(){
+        isPinned = false;
+    }
+
+    public void pin(Content content, int xCenter, int yCenter){
+        Point p = frame.getDrawingCoordinates(xCenter, yCenter);
+        pinX = p.x;
+        pinY = p.y;
+        pinnedContent = content;
+        isPinned = true;
+    }
+
+    private Rectangle placeOnFrame(){
+        int xOnFrame = getPinX() - frame.getX() - pinnedContent.getWidth()/2;
+        int yOnFrame = getPinY() - frame.getY() - pinnedContent.getHeight()/2;
+        return new Rectangle(xOnFrame, yOnFrame, getWidth() - xOnFrame, getHeight() - yOnFrame);
+    }
+
+    /*============================================
         GraphicComponent IMPLEMENTATIONS
      ===========================================*/
     @Override
@@ -216,5 +267,6 @@ public class DraggableContainer extends PositionedGraphicComponent {
     public void render(GUIContext context, Game game, Graphics g){
         if(hasBackground()) background.render(context, g, new Rectangle(0, 0, getWidth(), getHeight()));
         if(drawing != null) drawing.render(context, g, frame.getShape());
+        if(hasPinned()) pinnedContent.render(context, g, placeOnFrame());
     }
 }

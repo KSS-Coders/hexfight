@@ -30,7 +30,6 @@ public class BoardDrawing implements Content {
 
     @Override
     public void render(GUIContext container, Graphics g, Rectangle visibleArea){
-
         for(TileDrawing d : tiles){
             if(inRange(visibleArea, d.getShape())) {
                 d.render(container, g, (int) visibleArea.getX(), (int) visibleArea.getY());

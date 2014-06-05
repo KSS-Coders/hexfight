@@ -4,7 +4,10 @@ import org.apache.log4j.Logger;
 import org.cjcoders.hexfight.board.Hexagon;
 import org.cjcoders.hexfight.context.Context;
 import org.cjcoders.hexfight.game.GUIRequest;
+import org.cjcoders.hexfight.utils.Point;
+import org.cjcoders.hexfight.utils.Profiler;
 import org.newdawn.slick.*;
+import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Shape;
 import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.gui.GUIContext;
@@ -13,48 +16,31 @@ import org.newdawn.slick.state.StateBasedGame;
 /**
  * Created by mrakr_000 on 2014-06-02.
  */
-public class DialogBox {
+public class DialogBox extends SimpleContent {
 
     private Logger l = Logger.getLogger(this.getClass());
 
     private String msg;
-    private int x;
-    private int y;
-    private final int max;
-    private final int min;
-    private int width;
-    private int height;
+    private int max;
+    private int min;
     private GUIRequest<Integer> request;
+
     private TextButton commit;
     private TextButton increment;
     private TextButton decrement;
-    private Shape bg;
 
-    public boolean isInitialized() {
-        return initialized;
-    }
-
-    private boolean initialized;
     private Font font;
     private String commitTxt = "Commit";
 
     private Integer counter;
 
-    public DialogBox(String msg, int x, int y, int min, int max) throws SlickException {
-        this.msg = msg;
-        this.x = x;
-        this.y = y;
-        this.max = max;
-        this.min = min;
-        request = new GUIRequest<>();
-        counter = min;
+    public DialogBox(int width, int height) throws SlickException {
+        super(width, height);
     }
 
-    public void init(GUIContext context, StateBasedGame game, int stateId, int width, int height) throws SlickException {
-        this.width = width;
-        this.height = height;
+    public void init(GUIContext context, StateBasedGame game, int stateId) throws SlickException {
         font = Context.getInstance().resources().getFont("forces-squared", 24);
-        commit = new TextButton(context, font, commitTxt, (int) (x - font.getWidth(commitTxt)/2.0), (int) (y + 0.3 * height), game, stateId);
+        commit = new TextButton(context, font, commitTxt, 0,0, game, stateId);
         commit.addAction(new ButtonAction() {
             @Override
             public void performAction() {
@@ -62,14 +48,14 @@ public class DialogBox {
                 request.setFinished(true);
             }
         });
-        increment = new TextButton(context, font, "+", (int) (x + width * 0.4), y, game, stateId);
+        increment = new TextButton(context, font, "+",0,0, game, stateId);
         increment.addAction(new ButtonAction() {
             @Override
             public void performAction() {
                 if(counter < max) counter++;
             }
         });
-        decrement = new TextButton(context, font, "-", (int) (x - width * 0.4), y, game, stateId);
+        decrement = new TextButton(context, font, "-",0,0, game, stateId);
         decrement.addAction(new ButtonAction() {
             @Override
             public void performAction() {
@@ -79,39 +65,45 @@ public class DialogBox {
         commit.setEnabled(true);
         increment.setEnabled(true);
         decrement.setEnabled(true);
-        bg = new Hexagon(width, (int) (x - 0.5 * width), (int) (y - 0.5 * height));
-        initialized = true;
     }
 
-    public void render(GUIContext context, Graphics g){
+    @Override
+    public void render(GUIContext container, Graphics g, Rectangle visibleArea) {
+        Profiler p = new Profiler(this.getClass().getName(), Profiler.MICROS);
+        p.start();
+        p.setEnabled(false);
+        int x = (int) visibleArea.getX();
+        int y = (int) visibleArea.getY();
+        Shape bg = new Hexagon(getWidth(), x, y);
+        commit.setCenterLocation(x + getCenterX(), (int) (y + 0.8 * getHeight()));
+        increment.setCenterLocation((int) (x + getWidth() * 0.9), y + getCenterY());
+        decrement.setCenterLocation((int) (x + getWidth() * 0.1), y + getCenterY());
         g.fill(bg, new ShapeFill() {
             @Override
             public Color colorAt(Shape shape, float x, float y) {
-                return new  Color(0, 0, 0, (float) 0.8);
+                return new Color(0, 0, 0, (float) 0.8);
             }
 
             @Override
             public Vector2f getOffsetAt(Shape shape, float x, float y) {
-                return new Vector2f(0,0);
+                return new Vector2f(0, 0);
             }
         });
-        font.drawString((float) (x - font.getWidth(msg) / 2.0), (float) (y - 0.2 * height), msg);
-        font.drawString(x - font.getWidth(counter.toString())/2, y, counter.toString());
-        commit.render(context, g);
-        increment.render(context, g);
-        decrement.render(context, g);
+        font.drawString((float) (x - font.getWidth(msg) / 2.0 + getCenterX()), (float) (y + 0.3 * getHeight()), msg);
+        font.drawString(x - font.getWidth(counter.toString())/2 + getCenterX(), y + getCenterY(), counter.toString());
+        commit.render(container, g);
+        increment.render(container, g);
+        decrement.render(container, g);
+        p.logFromStart("DialogBox render");
     }
 
-    public GUIRequest getRequest() {
+    public GUIRequest<Integer> startRequest(String msg, int min, int max){
+        this.msg = msg;
+        this.min = min;
+        this.max = max;
+        counter = min;
+        this.request = new GUIRequest<>();
         return request;
     }
 
-    public void updateOffset(int dx, int dy) {
-        x += dx;
-        y += dy;
-        bg = new Hexagon(width, (int) (x - 0.5 * width), (int) (y - 0.5 * height));
-        commit.setLocation((int) (x - font.getWidth(commitTxt)/2.0), (int) (y + 0.3 * height));
-        increment.setLocation((int) (x + width * 0.4), y);
-        decrement.setLocation((int) (x - width * 0.4), y);
-    }
 }

@@ -7,7 +7,7 @@ import org.newdawn.slick.gui.GUIContext;
 /**
  * Created by mrakr_000 on 2014-06-04.
  */
-public interface GraphicComponent {
+public interface GraphicComponent{
     int getWidth();
 
     void setWidth(Integer width);

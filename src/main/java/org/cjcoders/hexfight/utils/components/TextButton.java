@@ -57,4 +57,8 @@ public class TextButton extends MouseOverArea {
         }
     }
 
+    public void setCenterLocation(int x, int y){
+        setLocation(x - font.getWidth(text)/2, y - font.getHeight(text)/2);
+    }
+
 }
