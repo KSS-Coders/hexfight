@@ -15,8 +15,7 @@ public class ConfigContainer {
 
     private Logger l = Logger.getLogger(this.getClass());
 
-    private static final int DEFAULT_TILE_SIZE = 100;
-    public static final String TILE_SIZE_KEY = "tileSize";
+
 
     private Map<String, Object> properties;
 
@@ -50,20 +49,67 @@ public class ConfigContainer {
 
     public Object getProperty(String ref){
         Object o = properties.get(ref);
-        if(o == null) o = ConfigDefaults.get(ref);
+        if(o == null) {
+            o = ConfigDefaults.get(ref);
+            setProperty(ref, o);
+        }
         return o;
     }
-    public int getTileSize(){
-        Object prop = getProperty(TILE_SIZE_KEY);
-        try {
-            return Integer.parseInt((String) prop);
-        }catch(NullPointerException npe){
-            l.info("Using default value for " + TILE_SIZE_KEY);
-            return DEFAULT_TILE_SIZE;
-        }catch(NumberFormatException nfe){
-            l.warn("Property " + TILE_SIZE_KEY + " has wrong format. Returning default value.");
-            return DEFAULT_TILE_SIZE;
+
+    public int getInt(String ref){
+        Object prop = getProperty(ref);
+        if(prop instanceof String) {
+            try {
+                int i = Integer.parseInt((String) prop);
+                setProperty(ref, i);
+                return i;
+            } catch (Exception e) {
+                l.info("Using default value for " + ref);
+                int i = (int) ConfigDefaults.get(ref);
+                setProperty(ref, i);
+                return i;
+            }
         }
+        else{
+            return (int) prop;
+        }
+    }
+    public double getDobule(String ref){
+        Object prop = getProperty(ref);
+        if(prop instanceof String) {
+            try {
+                double i = Double.parseDouble((String) prop);
+                setProperty(ref, i);
+                return i;
+            } catch (Exception e) {
+                l.info("Using default value for " + ref);
+                double i = (double) ConfigDefaults.get(ref);
+                setProperty(ref, i);
+                return i;
+            }
+        }
+        else{
+            return (double) prop;
+        }
+    }
+
+    public int getTileSize(){
+        return getInt(ConfigKey.TILE_SIZE_KEY);
+    }
+    public int getTilesNumber(){
+        return getInt(ConfigKey.TILES_NUMBER_KEY);
+    }
+    public int getInitialPlayerForces(){
+        return getInt(ConfigKey.INITIAL_PLAYER_FORCES_KEY);
+    }
+    public int getInitialNeutralForces(){
+        return getInt(ConfigKey.INITIAL_NEUTRAL_FORCES_KEY);
+    }
+    public int getPlayersNumber(){
+        return getInt(ConfigKey.PLAYERS_NUMBER_KEY);
+    }
+    public double getNonEmptyTilesFactor(){
+        return getDobule(ConfigKey.NON_EMPTY_TILES_FACTOR_KEY);
     }
     public void setProperty(String ref, Object obj){
         properties.put(ref, obj);

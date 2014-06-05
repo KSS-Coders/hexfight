@@ -16,9 +16,9 @@ public class BoardDrawer {
     private Logger l = Logger.getLogger(this.getClass());
 
     private final TileCalculator tileCalculator;
-    private final MainTileDrawer tileDrawer;
+    private final TileDrawer tileDrawer;
 
-    public BoardDrawer(TileCalculator tileCalculator, MainTileDrawer tileDrawer) {
+    public BoardDrawer(TileCalculator tileCalculator, TileDrawer tileDrawer) {
         this.tileCalculator = tileCalculator;
         this.tileDrawer = tileDrawer;
         l.setLevel(Level.DEBUG);

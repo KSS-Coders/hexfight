@@ -20,6 +20,11 @@ public class DraggableContainer extends PositionedGraphicComponent {
         this.frame = new VisibleFrame();
         focusOn(drawing.getCenterX(), drawing.getCenterY());
     }
+    public DraggableContainer(Integer positionX, Integer positionY, Integer visibleWidth, Integer visibleHeight) {
+        super(positionX, positionY, visibleWidth, visibleHeight);
+        this.drawing = null;
+        this.frame = new VisibleFrame();
+    }
 
     /*============================================
         BACKGROUND
@@ -35,9 +40,15 @@ public class DraggableContainer extends PositionedGraphicComponent {
     }
 
     /*============================================
-        DRAWING
-     ===========================================*/
+            DRAWING
+         ===========================================*/
     private Content drawing;
+
+    public void setDrawing(Content drawing) {
+        this.drawing = drawing;
+        l.info("Setting drawing");
+        focusOn(drawing.getCenterX(), drawing.getCenterY());
+    }
 
     public void drag(int dx, int dy){
         frame.move(-dx, -dy);
@@ -194,7 +205,6 @@ public class DraggableContainer extends PositionedGraphicComponent {
      ===========================================*/
     @Override
     public void init(GUIContext context, Game game) {
-        focusOn(drawing.getCenterX(), drawing.getCenterY());
     }
 
     @Override
@@ -205,6 +215,6 @@ public class DraggableContainer extends PositionedGraphicComponent {
     @Override
     public void render(GUIContext context, Game game, Graphics g){
         if(hasBackground()) background.render(context, g, new Rectangle(0, 0, getWidth(), getHeight()));
-        drawing.render(context, g, frame.getShape());
+        if(drawing != null) drawing.render(context, g, frame.getShape());
     }
 }

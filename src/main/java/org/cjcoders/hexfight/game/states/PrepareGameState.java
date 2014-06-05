@@ -8,6 +8,7 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.BasicGameState;
+import org.newdawn.slick.state.GameState;
 import org.newdawn.slick.state.StateBasedGame;
 
 /**
@@ -33,7 +34,16 @@ public class PrepareGameState extends BasicGameState{
 
     @Override
     public void update(GameContainer container, StateBasedGame game, int delta) throws SlickException {
+        PlayState play = (PlayState) game.getState(State.TURN.getCode());
+        int playersCount = Context.getInstance().config().getPlayersNumber();
+        play.setUp(getPlayers(playersCount));
         game.enterState(State.TURN.getCode());
+    }
+
+    private Player[] getPlayers(int playersCount) {
+        Player[] players = new Player[playersCount];
+        for(int i = 0; i < playersCount; ++i) players[i] = new Player(i);
+        return players;
     }
 
 

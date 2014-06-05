@@ -4,9 +4,10 @@ package org.cjcoders.hexfight.board;
  * Created by mrakr_000 on 2014-05-21.
  */
 public class TileForces {
-    TileForces(int strength) {
+    public TileForces(int strength) {
         this.strength = strength;
     }
+    public TileForces(){ this(0); }
 
     private int strength;
 
@@ -19,12 +20,6 @@ public class TileForces {
         if(this.strength < 0) this.strength = 0;
     }
 
-    public static final TileForces NEUTRAL_DEFAULT(){ return new TileForces((int) (Math.random() * 4)); }
-    public static final TileForces OWNED_DEFAULT = new TileForces(5);
-
-    public boolean isCritical(){
-        return strength < 5;
-    }
     public boolean isEmpty(){
         return strength == 0;
     }

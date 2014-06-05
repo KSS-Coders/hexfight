@@ -26,8 +26,11 @@ public class Tile{
         this.x = x;
         this.y = y;
         this.tileNo = tileNo;
-        forces = TileForces.NEUTRAL_DEFAULT();
+        forces = new TileForces();
         listeners = new HashSet<>();
+    }
+    public Tile(int tileNo){
+        this(0,0,tileNo);
     }
 
     public void addListener(TileListener listener){
@@ -75,5 +78,13 @@ public class Tile{
 
     public boolean isActive() {
         return active;
+    }
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public void setY(int y) {
+        this.y = y;
     }
 }

@@ -65,7 +65,7 @@ public class MainTileDrawer implements TileDrawer {
         p.start();
         Collection<TileDrawingLayer> tileDrawing = new ArrayList<>(10);
         p.log("Create array");
-        if(tile.getTileNo() < locations.length){
+        if(tile.getTileNo() >= 0){
             tileDrawing.add(locations[tile.getTileNo()]);
             p.log("Add location");
         }

@@ -1,9 +1,11 @@
 package org.cjcoders.hexfight.board;
 
 import org.apache.log4j.Logger;
+import org.cjcoders.hexfight.context.Context;
 import org.cjcoders.hexfight.game.Player;
 import org.cjcoders.hexfight.utils.ArrayGrid;
 import org.cjcoders.hexfight.utils.Grid;
+import org.cjcoders.hexfight.utils.Profiler;
 
 /**
  * Created by mrakr_000 on 2014-05-12.
@@ -20,8 +22,11 @@ public class Board{
     public Board(int width, int height) {
         grid = new ArrayGrid<>(height, width);
     }
+    public Board(Grid<Tile> grid){ this.grid = grid; }
 
     public static Board getDefault(int width, int height, int playersCount) {
+        Profiler p = new Profiler(Board.class.getName(), Profiler.MICROS);
+        p.start();
         Board b = new Board(width, height);
         Player[] players = new Player[playersCount];
 
@@ -31,7 +36,7 @@ public class Board{
             int y = (int) (Math.random() * (height - 1));
             b.getGrid().set(new Tile(x, y, (int) (Math.random() * (5))), y, x);
             b.getGrid().get(y, x).setOwner(players[i]);
-            b.getGrid().get(y, x).setForces(TileForces.OWNED_DEFAULT);
+            b.getGrid().get(y, x).setForces(new TileForces(Context.getInstance().config().getInitialNeutralForces()));
             l.info("Player " + i + ": [" + x + ", " + y + "]");
         }
 
@@ -44,6 +49,7 @@ public class Board{
                     b.grid.set(new Tile(x, y, (int) (Math.random() * (5))), y, x);
             }
         }
+        p.logFromStart("Board creation duration");
         return b;
     }
 }

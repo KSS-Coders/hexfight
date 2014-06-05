@@ -1,6 +1,7 @@
 package org.cjcoders.hexfight.board;
 
 import org.apache.log4j.Logger;
+import org.cjcoders.hexfight.utils.Point;
 import org.cjcoders.hexfight.utils.components.Content;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.geom.Rectangle;
@@ -29,6 +30,7 @@ public class BoardDrawing implements Content {
 
     @Override
     public void render(GUIContext container, Graphics g, Rectangle visibleArea){
+
         for(TileDrawing d : tiles){
             if(inRange(visibleArea, d.getShape())) {
                 d.render(container, g, (int) visibleArea.getX(), (int) visibleArea.getY());

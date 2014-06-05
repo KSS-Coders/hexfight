@@ -12,7 +12,7 @@ import java.util.Collection;
  */
 public class TileDrawing implements TileListener {
 
-    private MainTileDrawer drawer;
+    private TileDrawer drawer;
 
     public Tile getTile() {
         return tile;
@@ -21,7 +21,7 @@ public class TileDrawing implements TileListener {
     private Tile tile;
     private Collection<TileDrawingLayer> layers;
 
-    public TileDrawing(MainTileDrawer drawer, Tile tile) {
+    public TileDrawing(TileDrawer drawer, Tile tile) {
         this.drawer = drawer;
         this.tile = tile;
         update(tile);

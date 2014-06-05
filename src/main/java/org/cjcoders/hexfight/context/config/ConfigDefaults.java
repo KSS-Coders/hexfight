@@ -12,6 +12,12 @@ public class ConfigDefaults {
     static{
         defaults.put(ConfigKey.THEME_KEY, "space");
         defaults.put(ConfigKey.RESOLUTION_KEY, new Dimension(800, 600));
+        defaults.put(ConfigKey.TILE_SIZE_KEY, 100);
+        defaults.put(ConfigKey.TILES_NUMBER_KEY, 6);
+        defaults.put(ConfigKey.INITIAL_PLAYER_FORCES_KEY, 50);
+        defaults.put(ConfigKey.INITIAL_NEUTRAL_FORCES_KEY, 20);
+        defaults.put(ConfigKey.NON_EMPTY_TILES_FACTOR_KEY, 0.1);
+        defaults.put(ConfigKey.PLAYERS_NUMBER_KEY, 6);
     }
 
     public static Object get(String ref){
