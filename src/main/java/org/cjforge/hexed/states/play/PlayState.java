@@ -36,21 +36,20 @@ public class PlayState extends BasicGameState {
     @Override
     public void init(GameContainer container, StateBasedGame game) throws SlickException {
         board = new Board(container, game);
-//        hud = new Hud(container, game);
+        hud = new Hud(container, game);
     }
 
     @Override
     public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
         board.render(container, game, g);
-//        hud.render(container, game, g);
+        hud.render(container, game, g);
     }
 
     @Override
     public void update(final GameContainer container, final StateBasedGame game, int delta) throws SlickException {
-        pollInput(container, game, delta);
+        if(hud.update(container, game, delta))
         board.update(container, game, delta);
-
-
+        pollInput(container, game, delta);
     }
 
     private void pollInput(GameContainer container, StateBasedGame game, int delta) {
@@ -71,6 +70,7 @@ public class PlayState extends BasicGameState {
 
     @Override
     public void mouseClicked(int button, int x, int y, int clickCount) {
+        if(!hud.mouseClicked(button, x, y, clickCount))
         board.mouseClicked(button, x, y, clickCount);
     }
 
@@ -95,6 +95,6 @@ public class PlayState extends BasicGameState {
     public void setup(Gameplay gameplay) {
         this.gameplay = gameplay;
         board.setup(gameplay);
-//        hud.setup(gameplay);
+        hud.setup(gameplay);
     }
 }

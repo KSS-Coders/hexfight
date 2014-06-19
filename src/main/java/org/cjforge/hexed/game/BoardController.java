@@ -22,9 +22,9 @@ public class BoardController {
     public void tileClicked(Point p, GUICallback callback) {
         l.info("Tile " + p + " clicked");
         Tile currentTile = gameplay.getGameBoard().getGrid().get(p.y, p.x);
-        if (activeTile == null && currentTile.isOwned()) {
+        if (activeTile == null && currentTile.getOwner() == gameplay.getCurrentPlayer() && !currentTile.isExhausted()) {
             setActiveTile(currentTile);
-        } else {
+        } else  if(activeTile != null) {
             Point activeTileCoordinates = new Point(activeTile.getX(), activeTile.getY());
             if (gameplay.getCalculator().isNearby(p, activeTileCoordinates)) {
                 int forcesCount = callback.askForForcesCount(0, activeTile.getForces().getStrength());
@@ -39,6 +39,7 @@ public class BoardController {
                     } else {
                         attackTile(activeTile, currentTile, forcesCount);
                     }
+                    currentTile.setExhausted(true);
                 }
                 setActiveTile(null);
             } else {
@@ -58,7 +59,7 @@ public class BoardController {
     }
 
     private void attackTile(Tile from, Tile dest, int forcesCount) {
-
+        attackNeutralTile(from, dest, forcesCount);
     }
 
     private void attackNeutralTile(Tile from, Tile dest, int forcesCount) {

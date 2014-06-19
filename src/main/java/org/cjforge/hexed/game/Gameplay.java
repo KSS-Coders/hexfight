@@ -37,17 +37,33 @@ public class Gameplay {
     }
 
     public Player getNextPlayer() {
-        if (++currentplayerId == players.length) {
-            nextTurn();
-        }
+        boolean hasPlanets = false;
+        do {
+            if (++currentplayerId == players.length) {
+                nextTurn();
+            }
+            for(Tile t : gameBoard.getGrid()){
+                if(t.isOwned() && t. getOwner() == players[currentplayerId]){
+                    hasPlanets = true;
+                    break;
+                }
+            }
+        } while(!hasPlanets);
+        boardController.setActiveTile(null);
         return players[currentplayerId];
     }
 
     public void nextTurn() {
+        for(Tile t : gameBoard.getGrid()){
+            if(t.isExhausted()) t.setExhausted(false);
+            if(t.isOwned() && t.isPlanet()) t.setForces(new TileForces((int) (t.getForces().getStrength() * 1.2  + 5)));
+        }
         currentplayerId = 0;
     }
 
     public TileCalculator getCalculator() {
         return calculator;
     }
+
+    public Player getCurrentPlayer(){ return players[currentplayerId]; }
 }

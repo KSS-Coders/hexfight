@@ -26,6 +26,7 @@ public class MainTileDrawer implements TileDrawer {
     private final TileDrawingLayer ACTIVE_LAYER;
     private final TileDrawingLayer OWNED_LAYER;
     private final TileDrawingLayer FORCES_LAYER;
+    private final TileDrawingLayer EXHAUSTED_LAYER;
     private Logger l = Logger.getLogger(this.getClass());
     private Context context;
     private TileCalculator calculator;
@@ -44,6 +45,7 @@ public class MainTileDrawer implements TileDrawer {
         ACTIVE_LAYER = new ActiveLayer();
         OWNED_LAYER = new OwnedTileLayer();
         FORCES_LAYER = new EnforcedTileLayer();
+        EXHAUSTED_LAYER = new ExhaustedLayer();
         locations = new TileDrawingLayer[tiles.getHorizontalCount()];
         for (int i = 0; i < tiles.getHorizontalCount(); ++i) {
             locations[i] = new LocationLayer(tiles.getSubImage(i, 0));
@@ -88,6 +90,9 @@ public class MainTileDrawer implements TileDrawer {
         if (!tile.getForces().isEmpty() || tile.isOwned()) {
             tileDrawing.add(FORCES_LAYER);
             p.log("Add forces");
+        }
+        if(tile.isExhausted()){
+            tileDrawing.add(EXHAUSTED_LAYER);
         }
         p.logFromStart("Whole method");
         return tileDrawing;
@@ -202,10 +207,24 @@ public class MainTileDrawer implements TileDrawer {
 
     private class ActiveLayer extends TileDrawingLayer {
         private final ColorFill c;
-        int i;
 
         public ActiveLayer() {
-            c = new ColorFill(new Color(255, 255, 255, 0.3f));
+            c = new ColorFill(new Color(255, 255, 255, 75));
+        }
+
+        @Override
+        public void render(TileDrawing tileDrawing, GUIContext container, Graphics g, int xOffset, int yOffset) {
+            int x = tileDrawing.getX() - xOffset;
+            int y = tileDrawing.getY() - yOffset;
+            g.fill(new Hexagon(getTileSize(), x, y), c);
+        }
+    }
+
+    private class ExhaustedLayer extends TileDrawingLayer {
+        private final ColorFill c;
+
+        public ExhaustedLayer() {
+            c = new ColorFill(new Color(50, 50, 50, 150));
         }
 
         @Override

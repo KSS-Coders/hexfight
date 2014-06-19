@@ -17,6 +17,7 @@ public class Tile {
     private int tileNo;
     private TileForces forces;
     private boolean active;
+    private boolean exhausted;
 
     private Collection<TileListener> listeners;
 
@@ -108,4 +109,14 @@ public class Tile {
     public boolean hasFleet(){
         return !isPlanet() && isOwned();
     }
+
+    public boolean isExhausted() {
+        return exhausted && isOwned();
+    }
+
+    public void setExhausted(boolean exhausted) {
+        this.exhausted = exhausted;
+        notifyListeners();
+    }
+
 }
