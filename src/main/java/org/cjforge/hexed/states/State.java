@@ -10,15 +10,15 @@ public enum State {
 
     private int code;
 
-    public static int turnStateID(Player player){
+    private State(int code) {
+        this.code = code;
+    }
+
+    public static int turnStateID(Player player) {
         return TURN.getCode() + player.getID();
     }
 
     public int getCode() {
         return code;
-    }
-
-    private State(int code){
-        this.code = code;
     }
 }

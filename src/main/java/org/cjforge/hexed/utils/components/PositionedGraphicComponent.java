@@ -5,13 +5,6 @@ package org.cjforge.hexed.utils.components;
  */
 public abstract class PositionedGraphicComponent implements GraphicComponent {
 
-    public PositionedGraphicComponent(Integer x, Integer y, Integer width, Integer height) {
-        this.x = x;
-        this.y = y;
-        this.width = width;
-        this.height = height;
-    }
-
     /*============================================
         POSITION
      ===========================================*/
@@ -19,6 +12,12 @@ public abstract class PositionedGraphicComponent implements GraphicComponent {
     private int y;
     private int width;
     private int height;
+    public PositionedGraphicComponent(Integer x, Integer y, Integer width, Integer height) {
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
+    }
 
     public int getX() {
         return x;

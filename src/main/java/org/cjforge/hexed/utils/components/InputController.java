@@ -1,6 +1,9 @@
 package org.cjforge.hexed.utils.components;
 
-import java.util.*;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.NavigableSet;
 
 /**
  * Created by mrakr_000 on 2014-06-05.
@@ -16,18 +19,17 @@ public class InputController {
         refs = new LinkedList<>();
     }
 
-    public void addAction(String ref, InputAction action){
+    public void addAction(String ref, InputAction action) {
         layers.put(ref, new InputLayer(action));
         NavigableSet n;
     }
 
 
-
-    private class InputLayer{
+    private class InputLayer {
         boolean isEnabled;
         InputAction action;
 
-        InputLayer(InputAction action){
+        InputLayer(InputAction action) {
             this.action = action;
             isEnabled = true;
         }

@@ -20,7 +20,7 @@ import java.io.IOException;
 /**
  * Created by mrakr_000 on 2014-05-12.
  */
-public class GameCore extends StateBasedGame{
+public class GameCore extends StateBasedGame {
 
     public static final String GAME_TITLE = "Hexed";
 
@@ -29,6 +29,19 @@ public class GameCore extends StateBasedGame{
     public GameCore(String title) {
         super(title);
         context = Context.getInstance();
+    }
+
+    public static void main(String args[]) throws SlickException {
+        BasicConfigurator.configure();
+        GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+        int width = gd.getDisplayMode().getWidth();
+        int height = gd.getDisplayMode().getHeight();
+        AppGameContainer app = new AppGameContainer(new GameCore(GAME_TITLE));
+        app.setDisplayMode(width, height, true);
+        app.setShowFPS(false);
+        app.setTargetFrameRate(60);
+        app.setVSync(true);
+        app.start();
     }
 
     public void initGame(GameContainer container) throws SlickException {
@@ -48,19 +61,6 @@ public class GameCore extends StateBasedGame{
         addState(new MainMenuState());
         addState(new PrepareGameState());
         addState(new PlayState());
-    }
-
-    public static void main(String args[]) throws SlickException {
-        BasicConfigurator.configure();
-        GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
-        int width = gd.getDisplayMode().getWidth();
-        int height = gd.getDisplayMode().getHeight();
-        AppGameContainer app = new AppGameContainer(new GameCore(GAME_TITLE));
-        app.setDisplayMode(width, height, true);
-        app.setShowFPS(false);
-        app.setTargetFrameRate(60);
-        app.setVSync(true);
-        app.start();
     }
 
 }

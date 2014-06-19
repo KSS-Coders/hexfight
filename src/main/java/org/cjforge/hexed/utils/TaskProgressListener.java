@@ -5,6 +5,8 @@ package org.cjforge.hexed.utils;
  */
 public interface TaskProgressListener {
     void onUpdate(String statusMsg, double percentage);
+
     void onFinish();
+
     void onError(Throwable ex);
 }

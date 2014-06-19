@@ -26,7 +26,8 @@ public class ResourcesFileReader {
     private final Document resources;
     private Logger log = Logger.getLogger(this.getClass().getName());
 
-    /** Creates new ResourcesReader using specified resources file
+    /**
+     * Creates new ResourcesReader using specified resources file
      *
      * @param resourcesFileName resources file to read
      */
@@ -36,13 +37,18 @@ public class ResourcesFileReader {
         DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
         resources = dBuilder.parse(resourcesStream);
         log.setLevel(Level.ALL);
-        if(!log.isTraceEnabled()) log.setLevel(Level.TRACE);
+        if (!log.isTraceEnabled()) log.setLevel(Level.TRACE);
     }
 
-    public Collection<Resource> getConfigs(){
+    public static void main(String... args) throws ParserConfigurationException, SAXException, IOException {
+        ResourcesFileReader rr = new ResourcesFileReader("resources.xml");
+        rr.getImages(new Dimension(1902, 1080), "space");
+    }
+
+    public Collection<Resource> getConfigs() {
         Set<Resource> result = new HashSet<>();
         NodeList fonts = resources.getElementsByTagName("config");
-        for(int i = 0; i < fonts.getLength(); ++i){
+        for (int i = 0; i < fonts.getLength(); ++i) {
             Element n = (Element) fonts.item(i);
             result.add(loadConfig(n));
         }
@@ -60,7 +66,7 @@ public class ResourcesFileReader {
     public Collection<Resource> getFonts() {
         Set<Resource> result = new HashSet<>();
         NodeList fonts = resources.getElementsByTagName("fonts");
-        for(int i = 0; i < fonts.getLength(); ++i){
+        for (int i = 0; i < fonts.getLength(); ++i) {
             Element n = (Element) fonts.item(i);
             result.addAll(loadFonts(n));
         }
@@ -70,7 +76,7 @@ public class ResourcesFileReader {
     private Collection<Resource> loadFonts(Element n) {
         Set<Resource> result = new HashSet<>();
         NodeList fonts = n.getElementsByTagName("font");
-        for(int j = 0; j < fonts.getLength(); ++j){
+        for (int j = 0; j < fonts.getLength(); ++j) {
             Element e = (Element) fonts.item(j);
             result.add(loadFont(e, "fonts"));
         }
@@ -88,7 +94,7 @@ public class ResourcesFileReader {
     public Collection<Resource> getImages(Dimension resolution, String theme) {
         Set<Resource> result = new HashSet<>();
         NodeList images = resources.getElementsByTagName("images");
-        for(int i = 0; i < images.getLength(); ++i){
+        for (int i = 0; i < images.getLength(); ++i) {
             Element n = (Element) images.item(i);
             result.addAll(loadImages(n, resolution));
             result.addAll(loadTheme(n, resolution, theme));
@@ -99,9 +105,9 @@ public class ResourcesFileReader {
     private Collection<Resource> loadTheme(Element n, Dimension resolution, String theme) {
         Set<Resource> result = new HashSet<>();
         NodeList themes = n.getElementsByTagName("theme");
-        for(int i = 0; i < themes.getLength(); ++i){
+        for (int i = 0; i < themes.getLength(); ++i) {
             Element themeE = (Element) themes.item(i);
-            if(themeE.getAttribute("name").equals(theme)){
+            if (themeE.getAttribute("name").equals(theme)) {
                 result.add(loadThemeTiles(themeE));
                 result.add(loadThemeBackground(themeE, resolution));
             }
@@ -120,10 +126,10 @@ public class ResourcesFileReader {
     }
 
     private String getImgPathWithResolution(Element bgE, Dimension resolution) {
-        return (int) resolution.getWidth() + "x" + (int) resolution.getHeight() +"/" + bgE.getAttribute("path");
+        return (int) resolution.getWidth() + "x" + (int) resolution.getHeight() + "/" + bgE.getAttribute("path");
     }
 
-    private Resource loadThemeTiles(Element themeE){
+    private Resource loadThemeTiles(Element themeE) {
         NodeList tilesEL = themeE.getElementsByTagName("tiles");
         Element tilesE = (Element) tilesEL.item(0);
         String bgName = "tiles";
@@ -136,9 +142,9 @@ public class ResourcesFileReader {
     private Collection<Resource> loadImages(Element n, Dimension resolution) {
         Set<Resource> result = new HashSet<>();
         NodeList imgs = n.getElementsByTagName("img");
-        for(int j = 0; j < imgs.getLength(); ++j){
+        for (int j = 0; j < imgs.getLength(); ++j) {
             Element e = (Element) imgs.item(j);
-            if(e.hasChildNodes()) result.add(loadImageByResolution(e, resolution, "images"));
+            if (e.hasChildNodes()) result.add(loadImageByResolution(e, resolution, "images"));
             else result.add(loadImage(e, "images"));
         }
         return result;
@@ -158,10 +164,5 @@ public class ResourcesFileReader {
         Resource r = new Resource(name, path);
         log.trace("Reading scalable image attributes: " + r);
         return r;
-    }
-
-    public static void main(String... args) throws ParserConfigurationException, SAXException, IOException {
-        ResourcesFileReader rr = new ResourcesFileReader("resources.xml");
-        rr.getImages(new Dimension(1902, 1080), "space");
     }
 }

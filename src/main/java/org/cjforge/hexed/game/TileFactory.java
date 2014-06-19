@@ -14,25 +14,25 @@ public class TileFactory {
 
     private Logger l = Logger.getLogger(this.getClass());
 
-    public Tile[] getPlayerHomeTiles(Player[] players){
+    public Tile[] getPlayerHomeTiles(Player[] players) {
         Tile[] tiles = getNonEmptyTiles(players.length);
         int forces = Context.getInstance().config().getInitialPlayerForces();
-        for(int i = 0; i < players.length; ++i){
+        for (int i = 0; i < players.length; ++i) {
             tiles[i].setOwner(players[i]);
             tiles[i].setForces(new TileForces(forces));
         }
         return tiles;
     }
 
-    public Tile[] getNonEmptyTiles(int count){
+    public Tile[] getNonEmptyTiles(int count) {
         Collection<Tile> result = new ArrayList<>();
-        for(int i = 0; i < count; ++i){
+        for (int i = 0; i < count; ++i) {
             result.add(getNonEmptyTile());
         }
-        return  result.toArray(new Tile[result.size()]);
+        return result.toArray(new Tile[result.size()]);
     }
 
-    private Tile getNonEmptyTile(){
+    private Tile getNonEmptyTile() {
         Random rand = new Random();
         int tilesNumber = Context.getInstance().config().getTilesNumber();
         int tileNo = rand.nextInt(tilesNumber);
@@ -42,15 +42,15 @@ public class TileFactory {
         return t;
     }
 
-    public Tile[] getEmptyTiles(int count){
+    public Tile[] getEmptyTiles(int count) {
         Tile[] tiles = new Tile[count];
-        for(int i = 0; i < count; ++i){
+        for (int i = 0; i < count; ++i) {
             tiles[i] = getEmptyTile();
         }
         return tiles;
     }
 
-    private Tile getEmptyTile(){
+    private Tile getEmptyTile() {
         return new Tile(-1);
     }
 }

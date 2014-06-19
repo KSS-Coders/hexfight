@@ -9,7 +9,8 @@ import java.util.Map;
  */
 public class ConfigDefaults {
     private static final Map<String, Object> defaults = new HashMap<>();
-    static{
+
+    static {
         defaults.put(ConfigKey.THEME_KEY, "space");
         defaults.put(ConfigKey.RESOLUTION_KEY, new Dimension(800, 600));
         defaults.put(ConfigKey.TILE_SIZE_KEY, 100);
@@ -20,7 +21,7 @@ public class ConfigDefaults {
         defaults.put(ConfigKey.PLAYERS_NUMBER_KEY, 6);
     }
 
-    public static Object get(String ref){
+    public static Object get(String ref) {
         return defaults.get(ref);
     }
 }

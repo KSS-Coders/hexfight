@@ -38,17 +38,18 @@ public class GameIntroState extends BasicGameState {
 
     @Override
     public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
-        g.drawImage(logoMini, (container.getWidth() - logoMini.getWidth())/2, (float) (container.getHeight()* 0.2));
+        g.drawImage(logoMini, (container.getWidth() - logoMini.getWidth()) / 2, (float) (container.getHeight() * 0.2));
         String text = "This game was created by two marvelous programmers.";
-        forcesSquared18.drawString((container.getWidth() - forcesSquared18.getWidth(text))/2, (float) (container.getHeight()* 0.4),text);
+        forcesSquared18.drawString((container.getWidth() - forcesSquared18.getWidth(text)) / 2, (float) (container.getHeight() * 0.4), text);
         text = "By grading it highly you encourage them to built more breathtaking games.";
-        forcesSquared18.drawString((container.getWidth() - forcesSquared18.getWidth(text))/2, (float) (container.getHeight()* 0.4 + forcesSquared18.getHeight(text) + 5),text);
+        forcesSquared18.drawString((container.getWidth() - forcesSquared18.getWidth(text)) / 2, (float) (container.getHeight() * 0.4 + forcesSquared18.getHeight(text) + 5), text);
     }
 
     @Override
     public void update(GameContainer container, StateBasedGame game, int delta) throws SlickException {
         timePassed += delta;
-        if(timePassed > INTRO_DURATION) game.enterState(State.MAIN_MENU.getCode(), new FadeOutTransition(), new EmptyTransition());
+        if (timePassed > INTRO_DURATION)
+            game.enterState(State.MAIN_MENU.getCode(), new FadeOutTransition(), new EmptyTransition());
     }
 
     @Override

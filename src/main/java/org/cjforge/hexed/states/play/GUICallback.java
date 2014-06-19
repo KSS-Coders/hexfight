@@ -7,5 +7,6 @@ import org.cjforge.hexed.utils.Point;
  */
 public interface GUICallback {
     public Integer askForForcesCount(Integer min, Integer max);
+
     public Point getClickCoordinates();
 }

@@ -26,22 +26,22 @@ public class FontsManager {
     }
 
     public void load(String name, String path) throws IOException, FontFormatException {
-        if(fonts.keySet().contains(name)) return;
-        InputStream inputStream	= ResourceLoader.getResourceAsStream(path);
+        if (fonts.keySet().contains(name)) return;
+        InputStream inputStream = ResourceLoader.getResourceAsStream(path);
         fonts.put(name, new CustomizableFont(java.awt.Font.createFont(java.awt.Font.TRUETYPE_FONT, inputStream)));
     }
 
     public Font get(String ref, int size, String options) {
         FontSpec spec = new FontSpec(ref, size, options);
-        if(loadedFonts.containsKey(spec)){
+        if (loadedFonts.containsKey(spec)) {
             l.trace("Requested font " + spec + ". Loaded.");
             return loadedFonts.get(spec);
         }
         l.trace("Requested font " + spec + ". Loading.");
         CustomizableFont cFont = fonts.get(ref);
         cFont = cFont.withSize(size);
-        if(spec.isBold()) cFont.withStyle(CustomizableFont.BOLD);
-        if(spec.isItalic()) cFont.withStyle(CustomizableFont.ITALIC);
+        if (spec.isBold()) cFont.withStyle(CustomizableFont.BOLD);
+        if (spec.isItalic()) cFont.withStyle(CustomizableFont.ITALIC);
         Font f = cFont.get();
         loadedFonts.put(spec, f);
         return f;
@@ -60,7 +60,7 @@ public class FontsManager {
 
         @Override
         public boolean equals(Object obj) {
-            if(obj instanceof FontSpec){
+            if (obj instanceof FontSpec) {
                 FontSpec fs = (FontSpec) obj;
                 return fs.ref.equals(ref) && fs.size == size && equalOptions(fs);
             }
@@ -82,7 +82,7 @@ public class FontsManager {
             return hasOption("u") || hasOption("U");
         }
 
-        private boolean hasOption(CharSequence c){
+        private boolean hasOption(CharSequence c) {
             return options.contains(c);
         }
 
@@ -90,7 +90,7 @@ public class FontsManager {
             return hasOption("b") || hasOption("B");
         }
 
-        private boolean isItalic(){
+        private boolean isItalic() {
             return hasOption("i") || hasOption("I");
         }
     }

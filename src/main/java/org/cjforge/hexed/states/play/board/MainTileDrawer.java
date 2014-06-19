@@ -13,32 +13,25 @@ import org.newdawn.slick.geom.Shape;
 import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.gui.GUIContext;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
 
 /**
  * Created by mrakr_000 on 2014-05-21.
  */
 public class MainTileDrawer implements TileDrawer {
 
-    private Logger l = Logger.getLogger(this.getClass());
-
     private static final Color[] colors = new Color[]{Color.blue, Color.green, Color.red, Color.yellow, Color.darkGray, Color.cyan};
-
-    private Context context;
-    private TileCalculator calculator;
-    private boolean showGrid = true;
-
-    private TileDrawingLayer[] locations;
-    private TileDrawingLayer[] units;
     private final TileDrawingLayer GRID_LAYER;
     private final TileDrawingLayer ACTIVE_LAYER;
     private final TileDrawingLayer OWNED_LAYER;
     private final TileDrawingLayer FORCES_LAYER;
-
-    @Override
-    public Shape getShape(int x, int y) {
-        return calculator.getShape(x, y);
-    }
+    private Logger l = Logger.getLogger(this.getClass());
+    private Context context;
+    private TileCalculator calculator;
+    private boolean showGrid = true;
+    private TileDrawingLayer[] locations;
+    private TileDrawingLayer[] units;
 
     public MainTileDrawer(TileCalculator calculator) {
         this.calculator = calculator;
@@ -52,13 +45,18 @@ public class MainTileDrawer implements TileDrawer {
         OWNED_LAYER = new OwnedTileLayer();
         FORCES_LAYER = new EnforcedTileLayer();
         locations = new TileDrawingLayer[tiles.getHorizontalCount()];
-        for(int i = 0; i < tiles.getHorizontalCount(); ++i){
+        for (int i = 0; i < tiles.getHorizontalCount(); ++i) {
             locations[i] = new LocationLayer(tiles.getSubImage(i, 0));
         }
         units = new TileDrawingLayer[unitsSs.getHorizontalCount()];
-        for(int i = 0; i < unitsSs.getHorizontalCount(); ++i){
+        for (int i = 0; i < unitsSs.getHorizontalCount(); ++i) {
             units[i] = new UnitLayer(unitsSs.getSubImage(i, 0));
         }
+    }
+
+    @Override
+    public Shape getShape(int x, int y) {
+        return calculator.getShape(x, y);
     }
 
     @Override
@@ -68,23 +66,26 @@ public class MainTileDrawer implements TileDrawer {
         p.start();
         Collection<TileDrawingLayer> tileDrawing = new ArrayList<>(10);
         p.log("Create array");
-        if(tile.isOwned()){
+        if (tile.isOwned()) {
             tileDrawing.add(OWNED_LAYER);
             p.log("Add owned");
         }
-        if(tile.isPlanet()){
+        if (tile.isPlanet()) {
             tileDrawing.add(locations[tile.getTileNo()]);
             p.log("Add location");
+        } else if(tile.hasFleet()) {
+            tileDrawing.add(units[tile.getOwner().getID()]);
+            p.log("Add fleet");
         }
-        if(showGrid){
+        if (showGrid) {
             tileDrawing.add(GRID_LAYER);
             p.log("Add grid");
         }
-        if(tile.isActive()){
+        if (tile.isActive()) {
             tileDrawing.add(ACTIVE_LAYER);
             p.log("Add active");
         }
-        if(!tile.getForces().isEmpty()){
+        if (!tile.getForces().isEmpty() || tile.isOwned()) {
             tileDrawing.add(FORCES_LAYER);
             p.log("Add forces");
         }
@@ -92,7 +93,7 @@ public class MainTileDrawer implements TileDrawer {
         return tileDrawing;
     }
 
-    private Color playerColor(Player p){
+    private Color playerColor(Player p) {
         return colors[p.getID()];
     }
 
@@ -113,26 +114,26 @@ public class MainTileDrawer implements TileDrawer {
 
     @Override
     public int getCenterX(int x, int y) {
-        return getX(x, y) + calculator.getTileSize()/2;
+        return getX(x, y) + calculator.getTileSize() / 2;
     }
 
     @Override
     public int getCenterY(int x, int y) {
-        return getY(x, y) + calculator.getTileSize()/2;
+        return getY(x, y) + calculator.getTileSize() / 2;
     }
 
-    private class UnitLayer extends TileDrawingLayer{
+    private class UnitLayer extends TileDrawingLayer {
 
         private final Image unitImg;
 
-        public UnitLayer(Image unitImg){
+        public UnitLayer(Image unitImg) {
             this.unitImg = unitImg;
         }
 
         @Override
         public void render(TileDrawing tileDrawing, GUIContext container, Graphics g, int xOffset, int yOffset) {
-            int x = tileDrawing.getCenterX() - unitImg.getWidth()/2 - xOffset;
-            int y = tileDrawing.getCenterY() - unitImg.getHeight()/2 - yOffset;
+            int x = tileDrawing.getCenterX() - unitImg.getWidth() / 2 - xOffset;
+            int y = tileDrawing.getCenterY() - unitImg.getHeight() / 2 - yOffset;
             g.drawImage(unitImg, x, y);
         }
     }
@@ -159,8 +160,8 @@ public class MainTileDrawer implements TileDrawer {
 
         @Override
         public void render(TileDrawing tileDrawing, GUIContext container, Graphics g, int xOffset, int yOffset) {
-            int x = tileDrawing.getCenterX() - tileImg.getWidth()/2 - xOffset;
-            int y = tileDrawing.getCenterY() - tileImg.getHeight()/2 - yOffset;
+            int x = tileDrawing.getCenterX() - tileImg.getWidth() / 2 - xOffset;
+            int y = tileDrawing.getCenterY() - tileImg.getHeight() / 2 - yOffset;
             g.drawImage(tileImg, x, y);
         }
     }
@@ -169,14 +170,14 @@ public class MainTileDrawer implements TileDrawer {
         private final Font font;
 
         public EnforcedTileLayer() {
-            font = context.resources().getFont("forces-squared", getTileSize()/2);
+            font = context.resources().getFont("forces-squared", (int) (getTileSize() / 2.5));
         }
 
         @Override
         public void render(TileDrawing tileDrawing, GUIContext container, Graphics g, int xOffset, int yOffset) {
             String s = "" + tileDrawing.getTile().getForces().getStrength();
-            int x = tileDrawing.getX() + (getTileSize() - font.getWidth(s))/2 - xOffset;
-            int y = tileDrawing.getY() + (getTileSize() - font.getHeight(s))/2 - yOffset;
+            int x = tileDrawing.getX() + (getTileSize() - font.getWidth(s)) / 2 - xOffset;
+            int y = tileDrawing.getY() + (getTileSize() - font.getHeight(s)) / 2 - yOffset;
             font.drawString(x, y, s);
         }
     }
@@ -193,7 +194,7 @@ public class MainTileDrawer implements TileDrawer {
 
                 @Override
                 public Vector2f getOffsetAt(Shape shape, float x, float y) {
-                    return new Vector2f(new float[]{0,0});
+                    return new Vector2f(new float[]{0, 0});
                 }
             });
         }
@@ -203,7 +204,7 @@ public class MainTileDrawer implements TileDrawer {
         private final ColorFill c;
         int i;
 
-        public ActiveLayer(){
+        public ActiveLayer() {
             c = new ColorFill(new Color(255, 255, 255, 0.3f));
         }
 

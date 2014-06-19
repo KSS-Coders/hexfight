@@ -19,14 +19,16 @@ public class TextButton extends MouseOverArea {
     private List<ButtonAction> actions;
 
     public TextButton(GUIContext container, Font font, String text, int x, int y, StateBasedGame game) throws SlickException {
-        super(container, new Image(0,0), x, y, font.getWidth(text), font.getHeight(text));
+        super(container, new Image(0, 0), x, y, font.getWidth(text), font.getHeight(text));
         this.font = font;
         this.text = text;
         this.game = game;
         this.actions = new ArrayList<>();
     }
 
-    public void setEnabled(boolean enabled){ this.isEnabled = enabled; }
+    public void setEnabled(boolean enabled) {
+        this.isEnabled = enabled;
+    }
 
     @Override
     public void render(GUIContext container, Graphics g) {
@@ -42,21 +44,21 @@ public class TextButton extends MouseOverArea {
         super.render(container, g);
     }
 
-    public void addAction(ButtonAction action){
+    public void addAction(ButtonAction action) {
         actions.add(action);
     }
 
     @Override
-    public void mouseClicked(int button, int x, int y, int clickCount){
-        if(isMouseOver() && isEnabled){
-            for(ButtonAction action : actions){
+    public void mouseClicked(int button, int x, int y, int clickCount) {
+        if (isMouseOver() && isEnabled) {
+            for (ButtonAction action : actions) {
                 action.performAction();
             }
         }
     }
 
-    public void setCenterLocation(int x, int y){
-        setLocation(x - font.getWidth(text)/2, y - font.getHeight(text)/2);
+    public void setCenterLocation(int x, int y) {
+        setLocation(x - font.getWidth(text) / 2, y - font.getHeight(text) / 2);
     }
 
 }

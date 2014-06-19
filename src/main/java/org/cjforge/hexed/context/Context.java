@@ -19,18 +19,17 @@ public class Context {
     private static final String DEFAULT_RESOURCE_FILE = "resources.xml";
 
     private static final Context instance = new Context();
-
-    public static Context getInstance() {
-        return instance;
-    }
+    private ResourcesContainer resourcesContainer;
+    private ConfigContainer configContainer;
 
     private Context() {
         configContainer = new ConfigContainer();
         resourcesContainer = new ResourcesContainer();
     }
 
-    private ResourcesContainer resourcesContainer;
-    private ConfigContainer configContainer;
+    public static Context getInstance() {
+        return instance;
+    }
 
     public void init(GUIContext container) throws IOException, SAXException, ParserConfigurationException, SlickException, FontFormatException {
         configContainer.init(this, container);
@@ -39,6 +38,11 @@ public class Context {
         resourcesContainer.reload();
     }
 
-    public ResourcesContainer resources(){ return resourcesContainer; }
-    public ConfigContainer config(){ return configContainer; }
+    public ResourcesContainer resources() {
+        return resourcesContainer;
+    }
+
+    public ConfigContainer config() {
+        return configContainer;
+    }
 }

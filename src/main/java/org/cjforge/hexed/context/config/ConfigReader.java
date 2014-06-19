@@ -21,7 +21,7 @@ public class ConfigReader {
     }
 
     public void read(Collection<Resource> configs) throws IOException {
-        for(Resource r : configs){
+        for (Resource r : configs) {
             Properties props = loadConfig(r);
             Map<String, Object> config = propsToConfig(props);
             configContainer.addAll(config);
@@ -30,7 +30,7 @@ public class ConfigReader {
 
     private Map<String, Object> propsToConfig(Properties props) {
         Map<String, Object> result = new HashMap<>();
-        for(String propName : props.stringPropertyNames()){
+        for (String propName : props.stringPropertyNames()) {
             result.put(propName, props.getProperty(propName));
         }
         return result;

@@ -6,8 +6,8 @@ import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.gui.GUIContext;
 
 /**
-* Created by mrakr_000 on 2014-06-04.
-*/
+ * Created by mrakr_000 on 2014-06-04.
+ */
 public class ImageContent extends SimpleContent {
     private Image img;
 
@@ -16,7 +16,7 @@ public class ImageContent extends SimpleContent {
         this.img = img;
     }
 
-        @Override
+    @Override
     public void render(GUIContext container, Graphics g, Rectangle visibleArea) {
         g.drawImage(img, visibleArea.getX(), visibleArea.getY());
     }

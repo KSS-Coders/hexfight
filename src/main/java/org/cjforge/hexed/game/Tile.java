@@ -4,9 +4,9 @@ import java.util.Collection;
 import java.util.HashSet;
 
 /**
-* Created by mrakr_000 on 2014-05-13.
-*/
-public class Tile{
+ * Created by mrakr_000 on 2014-05-13.
+ */
+public class Tile {
 
     public static final int FILL_SPAWN_RATE = 4;
 
@@ -20,22 +20,24 @@ public class Tile{
 
     private Collection<TileListener> listeners;
 
-    public Tile(int x, int y, int tileNo){
+    public Tile(int x, int y, int tileNo) {
         this.x = x;
         this.y = y;
         this.tileNo = tileNo;
         forces = new TileForces();
         listeners = new HashSet<>();
     }
-    public Tile(int tileNo){
-        this(0,0,tileNo);
+
+    public Tile(int tileNo) {
+        this(0, 0, tileNo);
     }
 
-    public void addListener(TileListener listener){
+    public void addListener(TileListener listener) {
         listeners.add(listener);
     }
-    public void notifyListeners(){
-        for(TileListener listener : listeners){
+
+    public void notifyListeners() {
+        for (TileListener listener : listeners) {
             listener.update(this);
         }
     }
@@ -44,27 +46,45 @@ public class Tile{
         return tileNo;
     }
 
-    public boolean isOwned(){ return owner != null; }
-    public boolean isNeutral(){ return owner == null && !forces.isEmpty(); }
-    public boolean isVoid(){ return owner == null && forces.isEmpty(); }
+    public boolean isOwned() {
+        return owner != null;
+    }
 
-    public Player getOwner(){ return owner; }
+    public boolean isNeutral() {
+        return owner == null && !forces.isEmpty();
+    }
+
+    public boolean isVoid() {
+        return owner == null && forces.isEmpty();
+    }
+
+    public Player getOwner() {
+        return owner;
+    }
+
+    public void setOwner(Player owner) {
+        this.owner = owner;
+        notifyListeners();
+    }
 
     public int getX() {
         return x;
+    }
+
+    public void setX(int x) {
+        this.x = x;
     }
 
     public int getY() {
         return y;
     }
 
-    public void switchActive(){
-        active = !active;
-        notifyListeners();
+    public void setY(int y) {
+        this.y = y;
     }
 
-    public void setOwner(Player owner) {
-        this.owner = owner;
+    public void switchActive() {
+        active = !active;
         notifyListeners();
     }
 
@@ -81,13 +101,11 @@ public class Tile{
         return active;
     }
 
-    public void setX(int x) {
-        this.x = x;
+    public boolean isPlanet() {
+        return getTileNo() >= 0;
     }
 
-    public void setY(int y) {
-        this.y = y;
+    public boolean hasFleet(){
+        return !isPlanet() && isOwned();
     }
-
-    public boolean isPlanet(){ return getTileNo() >= 0; }
 }

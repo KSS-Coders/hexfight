@@ -1,11 +1,13 @@
 package org.cjforge.hexed.states.intro;
 
 import org.cjforge.hexed.context.Context;
-import org.cjforge.hexed.game.*;
+import org.cjforge.hexed.game.BoardFactory;
+import org.cjforge.hexed.game.GameBoard;
+import org.cjforge.hexed.game.Gameplay;
+import org.cjforge.hexed.game.Player;
 import org.cjforge.hexed.states.State;
 import org.cjforge.hexed.states.play.PlayState;
 import org.cjforge.hexed.utils.HexCalculator;
-import org.cjforge.hexed.utils.TileCalculator;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
@@ -15,7 +17,7 @@ import org.newdawn.slick.state.StateBasedGame;
 /**
  * Created by mrakr_000 on 2014-05-12.
  */
-public class PrepareGameState extends BasicGameState{
+public class PrepareGameState extends BasicGameState {
     public PrepareGameState() {
     }
 
@@ -42,14 +44,14 @@ public class PrepareGameState extends BasicGameState{
         PlayState play = (PlayState) game.getState(State.TURN.getCode());
         int playersCount = Context.getInstance().config().getPlayersNumber();
         Player[] players = getPlayers(playersCount);
-        GameBoard gameBoard = new BoardFactory().buildSimpleBoard(10,10,players);
+        GameBoard gameBoard = new BoardFactory().buildSimpleBoard(10, 10, players);
         play.setup(new Gameplay(gameBoard, players, new HexCalculator(Context.getInstance().config().getTileSize())));
         game.enterState(State.TURN.getCode());
     }
 
     private Player[] getPlayers(int playersCount) {
         Player[] players = new Player[playersCount];
-        for(int i = 0; i < playersCount; ++i) players[i] = new Player(i);
+        for (int i = 0; i < playersCount; ++i) players[i] = new Player(i);
         return players;
     }
 

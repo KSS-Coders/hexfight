@@ -10,11 +10,13 @@ public class Resources {
     public final ImagesManager images;
     public final FontsManager fonts;
 
-    public static Resources get(){ return instance; }
-
     private Resources() {
         fonts = new FontsManager();
         images = new ImagesManager();
+    }
+
+    public static Resources get() {
+        return instance;
     }
 
 }

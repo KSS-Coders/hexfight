@@ -15,10 +15,9 @@ import java.util.HashSet;
  */
 public class BoardDrawer {
 
-    private Logger l = Logger.getLogger(this.getClass());
-
     private final TileCalculator tileCalculator;
     private final TileDrawer tileDrawer;
+    private Logger l = Logger.getLogger(this.getClass());
 
     public BoardDrawer(TileCalculator tileCalculator, TileDrawer tileDrawer) {
         this.tileCalculator = tileCalculator;
@@ -26,9 +25,9 @@ public class BoardDrawer {
         l.setLevel(Level.DEBUG);
     }
 
-    public Collection<TileDrawing> getDrawing(GameBoard gameBoard){
+    public Collection<TileDrawing> getDrawing(GameBoard gameBoard) {
         Collection<TileDrawing> result = new HashSet<>();
-        for(Tile tile : gameBoard.getGrid()) {
+        for (Tile tile : gameBoard.getGrid()) {
 
             result.add(new TileDrawing(tileDrawer, tile));
         }
@@ -40,11 +39,11 @@ public class BoardDrawer {
     }
 
     public int getBoardHeight(int rows, int cols) {
-        return tileCalculator.getScreenYFor(rows-1, cols-1) + tileCalculator.getTileSize();
+        return tileCalculator.getScreenYFor(rows - 1, cols - 1) + tileCalculator.getTileSize();
     }
 
-    public int getBoardWidth(int rows, int cols){
-        return tileCalculator.getScreenXFor(rows-1, cols-1) + tileCalculator.getTileSize();
+    public int getBoardWidth(int rows, int cols) {
+        return tileCalculator.getScreenXFor(rows - 1, cols - 1) + tileCalculator.getTileSize();
     }
 
 }

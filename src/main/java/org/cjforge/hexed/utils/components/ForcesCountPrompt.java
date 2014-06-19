@@ -6,7 +6,10 @@ import org.cjforge.hexed.states.play.GUIRequest;
 import org.cjforge.hexed.utils.ColorFill;
 import org.cjforge.hexed.utils.Hexagon;
 import org.cjforge.hexed.utils.Profiler;
-import org.newdawn.slick.*;
+import org.newdawn.slick.Color;
+import org.newdawn.slick.Font;
+import org.newdawn.slick.Graphics;
+import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Shape;
 import org.newdawn.slick.gui.GUIContext;
@@ -36,7 +39,7 @@ public class ForcesCountPrompt extends SimpleContent {
     public ForcesCountPrompt(GUIContext context, StateBasedGame game, int width, int height) throws SlickException {
         super(width, height);
         font = Context.getInstance().resources().getFont("forces-squared", 24);
-        commit = new TextButton(context, font, commitTxt, 0,0, game);
+        commit = new TextButton(context, font, commitTxt, 0, 0, game);
         commit.addAction(new ButtonAction() {
             @Override
             public void performAction() {
@@ -44,18 +47,18 @@ public class ForcesCountPrompt extends SimpleContent {
                 request.setFinished(true);
             }
         });
-        increment = new TextButton(context, font, "+",0,0, game);
+        increment = new TextButton(context, font, "+", 0, 0, game);
         increment.addAction(new ButtonAction() {
             @Override
             public void performAction() {
-                if(counter < max) counter++;
+                if (counter < max) counter++;
             }
         });
-        decrement = new TextButton(context, font, "-",0,0, game);
+        decrement = new TextButton(context, font, "-", 0, 0, game);
         decrement.addAction(new ButtonAction() {
             @Override
             public void performAction() {
-                if(counter > min) counter--;
+                if (counter > min) counter--;
             }
         });
         commit.setEnabled(true);
@@ -76,14 +79,14 @@ public class ForcesCountPrompt extends SimpleContent {
         decrement.setCenterLocation((int) (x + getWidth() * 0.1), y + getCenterY());
         g.fill(bg, new ColorFill(new Color(0, 0, 0, 0.8f)));
         font.drawString((float) (x - font.getWidth(msg) / 2.0 + getCenterX()), (float) (y + 0.3 * getHeight()), msg);
-        font.drawString(x - font.getWidth(counter.toString())/2 + getCenterX(), y + getCenterY(), counter.toString());
+        font.drawString(x - font.getWidth(counter.toString()) / 2 + getCenterX(), y + getCenterY(), counter.toString());
         commit.render(container, g);
         increment.render(container, g);
         decrement.render(container, g);
         p.logFromStart("DialogBox render");
     }
 
-    public GUIRequest<Integer> startRequest(String msg, int min, int max){
+    public GUIRequest<Integer> startRequest(String msg, int min, int max) {
         this.msg = msg;
         this.min = min;
         this.max = max;

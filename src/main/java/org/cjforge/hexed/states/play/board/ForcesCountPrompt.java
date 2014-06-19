@@ -98,9 +98,9 @@ public class ForcesCountPrompt extends SimpleContent {
         Shape bg = new Hexagon(getWidth(), x, y);
         commit.setCenterLocation(x + getCenterX(), (int) (y + 0.8 * getHeight()));
         increment.setCenterLocation((int) (x + getWidth() * 0.8), y + getCenterY());
-        max.setCenterLocation((int) (x + getWidth() * 0.8) , y + getCenterY() + 20);
+        max.setCenterLocation((int) (x + getWidth() * 0.8), y + getCenterY() + 20);
         decrement.setCenterLocation((int) (x + getWidth() * 0.2), y + getCenterY());
-        min.setCenterLocation((int) (x + getWidth() * 0.2) , y + getCenterY() + 20);
+        min.setCenterLocation((int) (x + getWidth() * 0.2), y + getCenterY() + 20);
         g.fill(bg, new ColorFill(new Color(50, 0, 0, 200)));
         font.drawString((float) (x - font.getWidth(msg1) / 2.0 + getCenterX()), (float) (y + 0.2 * getHeight()), msg1);
         font.drawString((float) (x - font.getWidth(msg2) / 2.0 + getCenterX()), (float) (y + 0.3 * getHeight()), msg2);

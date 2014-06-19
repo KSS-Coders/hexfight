@@ -5,7 +5,6 @@ import org.cjforge.hexed.game.Gameplay;
 import org.cjforge.hexed.states.State;
 import org.cjforge.hexed.states.play.board.Board;
 import org.cjforge.hexed.states.play.hud.Hud;
-import org.cjforge.hexed.utils.Point;
 import org.newdawn.slick.*;
 import org.newdawn.slick.imageout.ImageIOWriter;
 import org.newdawn.slick.state.BasicGameState;

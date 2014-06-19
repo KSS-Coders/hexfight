@@ -20,14 +20,16 @@ public class Monitor {
     public Monitor(Observable observable) {
         this(observable, DEFAULT_TIMEOUT);
     }
+
     public Monitor(Observable observable, long sampleTime) {
         this.observable = observable;
         this.sampleTime = sampleTime;
         listeners = new HashSet<>();
-        monitor = new Thread(new MonitorRunnable());;
+        monitor = new Thread(new MonitorRunnable());
+        ;
     }
 
-    public void start(){
+    public void start() {
         Thread thread = new Thread(observable);
         Thread.UncaughtExceptionHandler h = new Thread.UncaughtExceptionHandler() {
             public void uncaughtException(Thread th, Throwable ex) {
@@ -44,22 +46,24 @@ public class Monitor {
         waitForTask();
     }
 
-    public void addListener(TaskProgressListener listener){
+    public void addListener(TaskProgressListener listener) {
         listeners.add(listener);
     }
 
-    public void notifyListeners(ObservableStatus status){
-        for(TaskProgressListener listener : listeners){
+    public void notifyListeners(ObservableStatus status) {
+        for (TaskProgressListener listener : listeners) {
             listener.onUpdate(status.statusMsg, status.percentage);
         }
     }
-    public void notifyListenersFinished(){
-        for(TaskProgressListener listener : listeners){
+
+    public void notifyListenersFinished() {
+        for (TaskProgressListener listener : listeners) {
             listener.onFinish();
         }
     }
-    public void notifyListenersError(Throwable ex){
-        for(TaskProgressListener listener : listeners){
+
+    public void notifyListenersError(Throwable ex) {
+        for (TaskProgressListener listener : listeners) {
             listener.onError(ex);
         }
     }
@@ -68,14 +72,15 @@ public class Monitor {
         monitor.join();
     }
 
-    private class MonitorRunnable implements Runnable{
+    private class MonitorRunnable implements Runnable {
 
         private ObservableStatus lastStatus;
+
         @Override
         public void run() {
             do {
                 ObservableStatus newStatus = observable.getStatus();
-                if(!newStatus.equals(lastStatus)){
+                if (!newStatus.equals(lastStatus)) {
                     lastStatus = newStatus;
                     notifyListeners(newStatus);
                 }
@@ -84,7 +89,7 @@ public class Monitor {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-            }while(!observable.isFinished());
+            } while (!observable.isFinished());
             notifyListenersFinished();
         }
     }

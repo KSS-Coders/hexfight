@@ -8,7 +8,8 @@ import org.newdawn.slick.gui.GUIContext;
  */
 public abstract class TileDrawingLayer {
 
-    public void init(TileDrawing drawing){}
+    public void init(TileDrawing drawing) {
+    }
 
     public abstract void render(TileDrawing tileDrawing, GUIContext container, Graphics g, int xOffset, int yOffset);
 }

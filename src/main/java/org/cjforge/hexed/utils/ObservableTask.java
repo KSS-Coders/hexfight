@@ -7,9 +7,9 @@ import org.cjforge.hexed.utils.components.ObservableStatus;
  */
 public abstract class ObservableTask implements Observable {
 
+    private final double maxCounter;
     private String status;
     private double counter;
-    private final double maxCounter;
     private boolean finished;
 
     public ObservableTask(String initialStatus, double maxCounter) {
@@ -18,14 +18,15 @@ public abstract class ObservableTask implements Observable {
         counter = 0;
     }
 
-    protected void enterState(String status, double counter){
+    protected void enterState(String status, double counter) {
         this.status = status;
         this.counter = counter;
     }
+
     abstract public void performTask();
 
     @Override
-    public final void run(){
+    public final void run() {
         finished = false;
         performTask();
         finished = true;
@@ -33,11 +34,11 @@ public abstract class ObservableTask implements Observable {
 
     @Override
     public ObservableStatus getStatus() {
-        return new ObservableStatus(status, counter/maxCounter * 100);
+        return new ObservableStatus(status, counter / maxCounter * 100);
     }
 
     @Override
-    public boolean isFinished(){
+    public boolean isFinished() {
         return finished;
     }
 }

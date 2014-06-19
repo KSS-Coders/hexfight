@@ -27,7 +27,7 @@ public class GUIRequest<T> {
     }
 
     public void blockUntilFinished() throws InterruptedException {
-        while(true) {
+        while (true) {
             if (isFinished()) break;
             else Thread.sleep(BLOCK_SLEEP_TIME);
         }

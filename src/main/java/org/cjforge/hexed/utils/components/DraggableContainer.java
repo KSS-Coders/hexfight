@@ -13,6 +13,30 @@ import org.newdawn.slick.gui.GUIContext;
 public class DraggableContainer extends PositionedGraphicComponent {
 
     private Logger l = Logger.getLogger(this.getClass());
+    /*============================================
+        BACKGROUND
+     ===========================================*/
+    private Content background;
+    /*============================================
+            DRAWING
+         ===========================================*/
+    private Content drawing;
+    /*============================================
+        PADDING
+     ===========================================*/
+    private int paddingX;
+    private int paddingY;
+    /*============================================
+        VISIBLE
+     ===========================================*/
+    private VisibleFrame frame;
+    /*============================================
+        PINNED CONTENT
+     ===========================================*/
+    private Content pinnedContent;
+    private int pinX;
+    private int pinY;
+    private boolean isPinned;
 
     public DraggableContainer(Integer positionX, Integer positionY, Integer visibleWidth, Integer visibleHeight, Content drawing) {
         super(positionX, positionY, visibleWidth, visibleHeight);
@@ -20,16 +44,12 @@ public class DraggableContainer extends PositionedGraphicComponent {
         this.frame = new VisibleFrame();
         focusOn(drawing.getCenterX(), drawing.getCenterY());
     }
+
     public DraggableContainer(Integer positionX, Integer positionY, Integer visibleWidth, Integer visibleHeight) {
         super(positionX, positionY, visibleWidth, visibleHeight);
         this.drawing = null;
         this.frame = new VisibleFrame();
     }
-
-    /*============================================
-        BACKGROUND
-     ===========================================*/
-    private Content background;
 
     public void setBackground(Content background) {
         this.background = background;
@@ -39,25 +59,20 @@ public class DraggableContainer extends PositionedGraphicComponent {
         return background != null;
     }
 
-    /*============================================
-            DRAWING
-         ===========================================*/
-    private Content drawing;
-
     public void setDrawing(Content drawing) {
         this.drawing = drawing;
         focusOn(drawing.getCenterX(), drawing.getCenterY());
     }
 
-    public void drag(int dx, int dy){
+    public void drag(int dx, int dy) {
         frame.move(-dx, -dy);
     }
 
-    public void drag(Point offset){
+    public void drag(Point offset) {
         drag(offset.x, offset.y);
     }
 
-    public Point getOffset(){
+    public Point getOffset() {
         return new Point(-frame.getX(), -frame.getY());
     }
 
@@ -65,15 +80,9 @@ public class DraggableContainer extends PositionedGraphicComponent {
         return frame.getDrawingCoordinates(x, y);
     }
 
-    public void focusOn(int x, int y){
-        frame.moveCenterTo(x,y);
+    public void focusOn(int x, int y) {
+        frame.moveCenterTo(x, y);
     }
-
-    /*============================================
-        PADDING
-     ===========================================*/
-    private int paddingX;
-    private int paddingY;
 
     public Integer getPaddingX() {
         return paddingX;
@@ -92,19 +101,95 @@ public class DraggableContainer extends PositionedGraphicComponent {
     }
 
     /*============================================
-        VISIBLE
+        OFFSET
      ===========================================*/
-    private VisibleFrame frame;
+    public Integer getMinVisibleOffsetX() {
+        return -getPaddingX();
+    }
+
+    public Integer getMinVisibleOffsetY() {
+        return -getPaddingY();
+    }
+
+    public Integer getMaxVisibleOffsetX() {
+        return drawing.getWidth() + getPaddingX() - getWidth();
+    }
+
+    public Integer getMaxVisibleOffsetY() {
+        return drawing.getHeight() + getPaddingY() - getHeight();
+    }
+
+    public int getPinY() {
+        return pinY;
+    }
+
+    public void setPinY(int pinY) {
+        this.pinY = pinY;
+    }
+
+    public int getPinX() {
+        return pinX;
+    }
+
+    public void setPinX(int pinX) {
+        this.pinX = pinX;
+    }
+
+    public boolean hasPinned() {
+        return pinnedContent != null && isPinned;
+    }
+
+    public void pin() {
+        isPinned = true;
+    }
+
+    public void unpin() {
+        isPinned = false;
+    }
+
+    public void pin(Content content, int xCenter, int yCenter) {
+        Point p = frame.getDrawingCoordinates(xCenter, yCenter);
+        pinX = p.x;
+        pinY = p.y;
+        pinnedContent = content;
+        isPinned = true;
+    }
+
+    private Rectangle placeOnFrame() {
+        int xOnFrame = getPinX() - frame.getX() - pinnedContent.getWidth() / 2;
+        int yOnFrame = getPinY() - frame.getY() - pinnedContent.getHeight() / 2;
+        return new Rectangle(xOnFrame, yOnFrame, getWidth() - xOnFrame, getHeight() - yOnFrame);
+    }
+
+    /*============================================
+        GraphicComponent IMPLEMENTATIONS
+     ===========================================*/
+    @Override
+    public void init(GUIContext context, Game game) {
+    }
+
+    @Override
+    public void update(GUIContext context, Game game, int delta) {
+
+    }
+
+    @Override
+    public void render(GUIContext context, Game game, Graphics g) {
+        if (hasBackground()) background.render(context, g, new Rectangle(0, 0, getWidth(), getHeight()));
+        if (drawing != null) drawing.render(context, g, frame.getShape());
+        if (hasPinned()) pinnedContent.render(context, g, placeOnFrame());
+    }
 
     private class VisibleFrame {
         private int x;
         private int y;
 
-        private void move(int dx, int dy){
+        private void move(int dx, int dy) {
             moveTo(getX() + dx, getY() + dy);
         }
-        private void moveCenterTo(int x, int y){
-            moveTo(x - getWidth()/2, y - getHeight()/2);
+
+        private void moveCenterTo(int x, int y) {
+            moveTo(x - getWidth() / 2, y - getHeight() / 2);
         }
 
         public Integer getX() {
@@ -178,93 +263,5 @@ public class DraggableContainer extends PositionedGraphicComponent {
             moveHorizontally(x);
             moveVertically(y);
         }
-    }
-
-    /*============================================
-        OFFSET
-     ===========================================*/
-    public Integer getMinVisibleOffsetX(){
-        return -getPaddingX();
-    }
-
-    public Integer getMinVisibleOffsetY(){
-        return -getPaddingY();
-    }
-
-    public Integer getMaxVisibleOffsetX(){
-        return drawing.getWidth() + getPaddingX() - getWidth();
-    }
-
-    public Integer getMaxVisibleOffsetY(){
-        return drawing.getHeight() + getPaddingY() - getHeight();
-    }
-
-    /*============================================
-        PINNED CONTENT
-     ===========================================*/
-    private Content pinnedContent;
-    private int pinX;
-    private int pinY;
-    private boolean isPinned;
-
-    public int getPinY() {
-        return pinY;
-    }
-
-    public void setPinY(int pinY) {
-        this.pinY = pinY;
-    }
-
-    public int getPinX() {
-        return pinX;
-    }
-
-    public void setPinX(int pinX) {
-        this.pinX = pinX;
-    }
-
-    public boolean hasPinned(){
-        return pinnedContent != null && isPinned;
-    }
-
-    public void pin(){
-        isPinned = true;
-    }
-
-    public void unpin(){
-        isPinned = false;
-    }
-
-    public void pin(Content content, int xCenter, int yCenter){
-        Point p = frame.getDrawingCoordinates(xCenter, yCenter);
-        pinX = p.x;
-        pinY = p.y;
-        pinnedContent = content;
-        isPinned = true;
-    }
-
-    private Rectangle placeOnFrame(){
-        int xOnFrame = getPinX() - frame.getX() - pinnedContent.getWidth()/2;
-        int yOnFrame = getPinY() - frame.getY() - pinnedContent.getHeight()/2;
-        return new Rectangle(xOnFrame, yOnFrame, getWidth() - xOnFrame, getHeight() - yOnFrame);
-    }
-
-    /*============================================
-        GraphicComponent IMPLEMENTATIONS
-     ===========================================*/
-    @Override
-    public void init(GUIContext context, Game game) {
-    }
-
-    @Override
-    public void update(GUIContext context, Game game, int delta) {
-
-    }
-
-    @Override
-    public void render(GUIContext context, Game game, Graphics g){
-        if(hasBackground()) background.render(context, g, new Rectangle(0, 0, getWidth(), getHeight()));
-        if(drawing != null) drawing.render(context, g, frame.getShape());
-        if(hasPinned()) pinnedContent.render(context, g, placeOnFrame());
     }
 }

@@ -15,14 +15,8 @@ import java.util.Collection;
 public class TileDrawing implements TileListener {
 
     private TileDrawer drawer;
-
-    public Tile getTile() {
-        return tile;
-    }
-
     private Tile tile;
     private Collection<TileDrawingLayer> layers;
-
     public TileDrawing(TileDrawer drawer, Tile tile) {
         this.drawer = drawer;
         this.tile = tile;
@@ -30,20 +24,25 @@ public class TileDrawing implements TileListener {
         tile.addListener(this);
     }
 
+    public Tile getTile() {
+        return tile;
+    }
+
     public Shape getShape() {
         return drawer.getShape(drawer.getX(tile.getX(), tile.getY()), drawer.getY(tile.getX(), tile.getY()));
     }
 
     public void render(GUIContext container, Graphics g, int xOffset, int yOffset) {
-        for(TileDrawingLayer layer : layers) {
+        for (TileDrawingLayer layer : layers) {
             layer.render(this, container, g, xOffset, yOffset);
         }
     }
 
-    public int getX(){
+    public int getX() {
         return drawer.getX(tile.getX(), tile.getY());
     }
-    public int getY(){
+
+    public int getY() {
         return drawer.getY(tile.getX(), tile.getY());
     }
 

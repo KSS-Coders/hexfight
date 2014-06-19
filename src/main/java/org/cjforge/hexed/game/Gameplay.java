@@ -28,7 +28,7 @@ public class Gameplay {
         return players;
     }
 
-    public Player getPlayer(int id){
+    public Player getPlayer(int id) {
         return players[id];
     }
 
@@ -36,14 +36,14 @@ public class Gameplay {
         return gameBoard;
     }
 
-    public Player getNextPlayer(){
-        if(++currentplayerId == players.length){
+    public Player getNextPlayer() {
+        if (++currentplayerId == players.length) {
             nextTurn();
         }
         return players[currentplayerId];
     }
 
-    public void nextTurn(){
+    public void nextTurn() {
         currentplayerId = 0;
     }
 

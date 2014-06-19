@@ -9,19 +9,19 @@ import java.util.Map;
 public abstract class ResourceManager<T> {
     private Map<String, T> resources;
 
-    ResourceManager(){
+    ResourceManager() {
         resources = new HashMap<>();
     }
 
-    protected void addResource(String name, T resource){
+    protected void addResource(String name, T resource) {
         resources.put(name, resource);
     }
 
-    public boolean refExists(String ref){
+    public boolean refExists(String ref) {
         return resources.keySet().contains(ref);
     }
 
-    public T get(String name){
+    public T get(String name) {
         return resources.get(name);
     }
 

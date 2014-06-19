@@ -29,34 +29,35 @@ public class BoardDrawing implements Content {
     }
 
     @Override
-    public void render(GUIContext container, Graphics g, Rectangle visibleArea){
-        for(TileDrawing d : tiles){
-            if(inRange(visibleArea, d.getShape())) {
+    public void render(GUIContext container, Graphics g, Rectangle visibleArea) {
+        for (TileDrawing d : tiles) {
+            if (inRange(visibleArea, d.getShape())) {
                 d.render(container, g, (int) visibleArea.getX(), (int) visibleArea.getY());
             }
         }
     }
 
-    private boolean inRange(Shape area, Shape element){
+    private boolean inRange(Shape area, Shape element) {
         return area.contains(element) || area.intersects(element);
     }
 
     @Override
-    public int getWidth(){
+    public int getWidth() {
         return drawer.getBoardWidth(gameBoard.getGrid().cols(), gameBoard.getGrid().rows());
     }
 
     @Override
-    public int getHeight(){
+    public int getHeight() {
         return drawer.getBoardHeight(gameBoard.getGrid().cols(), gameBoard.getGrid().rows());
     }
 
     @Override
-    public int getCenterX(){
-        return getWidth()/2;
+    public int getCenterX() {
+        return getWidth() / 2;
     }
+
     @Override
-    public int getCenterY(){
-        return getHeight()/2;
+    public int getCenterY() {
+        return getHeight() / 2;
     }
 }

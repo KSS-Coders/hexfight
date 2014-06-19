@@ -1,7 +1,7 @@
 package org.cjforge.hexed.context.resources;
 
-import org.newdawn.slick.*;
 import org.newdawn.slick.Font;
+import org.newdawn.slick.TrueTypeFont;
 
 /**
  * Created by mrakr_000 on 2014-05-12.
@@ -18,17 +18,19 @@ public class CustomizableFont {
         this.font = font;
     }
 
-    public CustomizableFont withSize(float size){
+    public CustomizableFont withSize(float size) {
         return new CustomizableFont(font.deriveFont(size));
     }
 
-    public CustomizableFont withStyle(int style){
+    public CustomizableFont withStyle(int style) {
         return new CustomizableFont(font.deriveFont(style));
     }
 
-    public Font get(){ return new TrueTypeFont(font, false); }
+    public Font get() {
+        return new TrueTypeFont(font, false);
+    }
 
-    public Font getWithSize(float size){
+    public Font getWithSize(float size) {
         return new TrueTypeFont(font.deriveFont(size), false);
     }
 }

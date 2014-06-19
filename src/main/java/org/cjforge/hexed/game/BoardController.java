@@ -22,14 +22,14 @@ public class BoardController {
     public void tileClicked(Point p, GUICallback callback) {
         l.info("Tile " + p + " clicked");
         Tile currentTile = gameplay.getGameBoard().getGrid().get(p.y, p.x);
-        if(activeTile == null && currentTile.isOwned()){
+        if (activeTile == null && currentTile.isOwned()) {
             setActiveTile(currentTile);
         } else {
             Point activeTileCoordinates = new Point(activeTile.getX(), activeTile.getY());
-            if(gameplay.getCalculator().isNearby(p,activeTileCoordinates)){
+            if (gameplay.getCalculator().isNearby(p, activeTileCoordinates)) {
                 int forcesCount = callback.askForForcesCount(0, activeTile.getForces().getStrength());
                 l.info("Obtained i : " + forcesCount);
-                if(forcesCount > 0) {
+                if (forcesCount > 0) {
                     if (currentTile.getOwner() == activeTile.getOwner()) {
                         moveForces(activeTile, currentTile, forcesCount);
                     } else if (currentTile.isVoid()) {
@@ -42,7 +42,7 @@ public class BoardController {
                 }
                 setActiveTile(null);
             } else {
-                if(currentTile.isOwned()) {
+                if (currentTile.isOwned()) {
                     setActiveTile(currentTile);
                 } else {
                     setActiveTile(null);
@@ -52,16 +52,16 @@ public class BoardController {
     }
 
     public void setActiveTile(Tile currentTile) {
-        if(activeTile != null) activeTile.switchActive();
+        if (activeTile != null) activeTile.switchActive();
         activeTile = currentTile;
-        if(currentTile != null) currentTile.switchActive();
+        if (currentTile != null) currentTile.switchActive();
     }
 
-    private void attackTile(Tile activeTile, Tile currentTile, int forcesCount) {
+    private void attackTile(Tile from, Tile dest, int forcesCount) {
 
     }
 
-    private void attackNeutralTile(Tile activeTile, Tile currentTile, int forcesCount) {
+    private void attackNeutralTile(Tile from, Tile dest, int forcesCount) {
 
     }
 
@@ -74,12 +74,12 @@ public class BoardController {
     private void moveForces(Tile from, Tile dest, int forcesCount) {
         dest.getForces().setStrength(dest.getForces().getStrength() + forcesCount);
         dest.notifyListeners();
-        moveForcesFrom(from ,forcesCount);
+        moveForcesFrom(from, forcesCount);
     }
 
-    private void moveForcesFrom(Tile from, int forcesCount){
+    private void moveForcesFrom(Tile from, int forcesCount) {
         from.getForces().setStrength(from.getForces().getStrength() - forcesCount);
-        if(!from.isPlanet() && from.getForces().isEmpty()) from.setOwner(null);
+        if (!from.isPlanet() && from.getForces().isEmpty()) from.setOwner(null);
     }
 
 }

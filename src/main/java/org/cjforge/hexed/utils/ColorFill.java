@@ -23,6 +23,6 @@ public class ColorFill implements ShapeFill {
 
     @Override
     public Vector2f getOffsetAt(Shape shape, float x, float y) {
-        return new Vector2f(1,1);
+        return new Vector2f(1, 1);
     }
 }

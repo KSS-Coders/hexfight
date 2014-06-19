@@ -15,13 +15,13 @@ import org.newdawn.slick.state.StateBasedGame;
 /**
  * Created by mrakr_000 on 2014-06-19.
  */
-public class Board extends DraggableContainer{
+public class Board extends DraggableContainer {
     private final ForcesCountPrompt dialog;
     private Gameplay gameplay;
     private BoardDrawer boardDrawer;
 
     public Board(GameContainer container, StateBasedGame game) throws SlickException {
-        super(0,0,0,0);
+        super(0, 0, 0, 0);
         Context context = Context.getInstance();
         Image bgImage = context.resources().getImage("theme-bg");
         setWidth(container.getScreenWidth());
@@ -45,8 +45,8 @@ public class Board extends DraggableContainer{
         Input input = context.getInput();
     }
 
-    public void mouseClicked(int button, final int mx, final int my, int clickCount){
-        if(!hasPinned() && button == Input.MOUSE_LEFT_BUTTON){
+    public void mouseClicked(int button, final int mx, final int my, int clickCount) {
+        if (!hasPinned() && button == Input.MOUSE_LEFT_BUTTON) {
             final Point p = getAbsoluteCooridnates(mx, my);
             final Point p1 = boardDrawer.getBoardCooridnates(p.x, p.y);
             new Thread(new Runnable() {

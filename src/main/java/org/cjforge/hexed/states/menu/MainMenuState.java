@@ -5,9 +5,6 @@ import org.cjforge.hexed.states.State;
 import org.cjforge.hexed.utils.components.ButtonAction;
 import org.cjforge.hexed.utils.components.TextButton;
 import org.newdawn.slick.*;
-import org.newdawn.slick.Font;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Image;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
@@ -30,7 +27,7 @@ public class MainMenuState extends BasicGameState {
 
     private Context context;
 
-    public MainMenuState(){
+    public MainMenuState() {
         this.context = Context.getInstance();
     }
 
@@ -44,14 +41,14 @@ public class MainMenuState extends BasicGameState {
         try {
             cubic64b = context.resources().getFont("cubic", 64, "b");
             forcedSquared48 = context.resources().getFont("forces-squared", 48);
-            bg =  context.resources().getImage("menu-bg");
-            logo =  context.resources().getImage("logo");
+            bg = context.resources().getImage("menu-bg");
+            logo = context.resources().getImage("logo");
         } catch (Exception e) {
             e.printStackTrace();
         }
         String buttonText = "Start game";
-        startGame = new TextButton(container, forcedSquared48, buttonText, (container.getWidth() - forcedSquared48.getWidth(buttonText))/2, 300, game);
-        exit = new TextButton(container, forcedSquared48, "Exit", (int) (container.getWidth()*0.9), (int) (container.getHeight()*0.9), game);
+        startGame = new TextButton(container, forcedSquared48, buttonText, (container.getWidth() - forcedSquared48.getWidth(buttonText)) / 2, 300, game);
+        exit = new TextButton(container, forcedSquared48, "Exit", (int) (container.getWidth() * 0.9), (int) (container.getHeight() * 0.9), game);
         exit.setEnabled(true);
         startGame.setEnabled(true);
         exit.addAction(new ButtonAction() {
@@ -71,7 +68,7 @@ public class MainMenuState extends BasicGameState {
     @Override
     public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
         g.drawImage(bg, 0, 0);
-        g.drawImage(logo,(container.getWidth() - logo.getWidth())/2, (float) (container.getHeight() * 0.1));
+        g.drawImage(logo, (container.getWidth() - logo.getWidth()) / 2, (float) (container.getHeight() * 0.1));
         startGame.render(container, g);
         exit.render(container, g);
     }
