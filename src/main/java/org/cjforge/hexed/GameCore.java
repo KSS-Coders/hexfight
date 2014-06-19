@@ -6,7 +6,6 @@ import org.cjforge.hexed.states.intro.GameIntroState;
 import org.cjforge.hexed.states.intro.KickState;
 import org.cjforge.hexed.states.intro.PrepareGameState;
 import org.cjforge.hexed.states.menu.MainMenuState;
-import org.cjforge.hexed.states.play.NewPlayState;
 import org.cjforge.hexed.states.play.PlayState;
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.GameContainer;
@@ -48,7 +47,7 @@ public class GameCore extends StateBasedGame{
         addState(new GameIntroState());
         addState(new MainMenuState());
         addState(new PrepareGameState());
-        addState(new NewPlayState());
+        addState(new PlayState());
     }
 
     public static void main(String args[]) throws SlickException {

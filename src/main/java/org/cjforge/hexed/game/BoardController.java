@@ -11,16 +11,77 @@ public class BoardController {
 
     private Logger l = Logger.getLogger(this.getClass());
 
-    private GameBoard gameBoard;
+    private Gameplay gameplay;
 
-    public BoardController(GameBoard gameBoard) {
-        this.gameBoard = gameBoard;
+    private Tile activeTile;
+
+    public BoardController(Gameplay gameplay) {
+        this.gameplay = gameplay;
     }
 
     public void tileClicked(Point p, GUICallback callback) {
         l.info("Tile " + p + " clicked");
-        gameBoard.getGrid().get(p.y, p.x).switchActive();
-        int i = callback.askForInt("Get int", 0, 10);
-        l.info("Obtained i : " + i);
+        Tile currentTile = gameplay.getGameBoard().getGrid().get(p.y, p.x);
+        if(activeTile == null && currentTile.isOwned()){
+            setActiveTile(currentTile);
+        } else {
+            Point activeTileCoordinates = new Point(activeTile.getX(), activeTile.getY());
+            if(gameplay.getCalculator().isNearby(p,activeTileCoordinates)){
+                int forcesCount = callback.askForForcesCount(0, activeTile.getForces().getStrength());
+                l.info("Obtained i : " + forcesCount);
+                if(forcesCount > 0) {
+                    if (currentTile.getOwner() == activeTile.getOwner()) {
+                        moveForces(activeTile, currentTile, forcesCount);
+                    } else if (currentTile.isVoid()) {
+                        conquerTile(activeTile, currentTile, forcesCount);
+                    } else if (currentTile.isNeutral()) {
+                        attackNeutralTile(activeTile, currentTile, forcesCount);
+                    } else {
+                        attackTile(activeTile, currentTile, forcesCount);
+                    }
+                }
+                setActiveTile(null);
+            } else {
+                if(currentTile.isOwned()) {
+                    setActiveTile(currentTile);
+                } else {
+                    setActiveTile(null);
+                }
+            }
+        }
     }
+
+    public void setActiveTile(Tile currentTile) {
+        if(activeTile != null) activeTile.switchActive();
+        activeTile = currentTile;
+        if(currentTile != null) currentTile.switchActive();
+    }
+
+    private void attackTile(Tile activeTile, Tile currentTile, int forcesCount) {
+
+    }
+
+    private void attackNeutralTile(Tile activeTile, Tile currentTile, int forcesCount) {
+
+    }
+
+    private void conquerTile(Tile from, Tile dest, int forcesCount) {
+        dest.getForces().setStrength(forcesCount);
+        dest.setOwner(from.getOwner());
+        moveForcesFrom(from, forcesCount);
+    }
+
+    private void moveForces(Tile from, Tile dest, int forcesCount) {
+        dest.getForces().setStrength(dest.getForces().getStrength() + forcesCount);
+        dest.notifyListeners();
+        moveForcesFrom(from ,forcesCount);
+    }
+
+    private void moveForcesFrom(Tile from, int forcesCount){
+        from.getForces().setStrength(from.getForces().getStrength() - forcesCount);
+        if(!from.isPlanet() && from.getForces().isEmpty()) from.setOwner(null);
+    }
+
 }
+
+

@@ -2,14 +2,10 @@ package org.cjforge.hexed.states.play.board;
 
 import org.cjforge.hexed.context.Context;
 import org.cjforge.hexed.game.Gameplay;
-import org.cjforge.hexed.states.State;
 import org.cjforge.hexed.states.play.GUICallback;
 import org.cjforge.hexed.states.play.GUIRequest;
-import org.cjforge.hexed.utils.HexCalculator;
 import org.cjforge.hexed.utils.Point;
-import org.cjforge.hexed.utils.TileCalculator;
 import org.cjforge.hexed.utils.components.Content;
-import org.cjforge.hexed.utils.components.DialogBox;
 import org.cjforge.hexed.utils.components.DraggableContainer;
 import org.cjforge.hexed.utils.components.ImageContent;
 import org.newdawn.slick.*;
@@ -20,7 +16,7 @@ import org.newdawn.slick.state.StateBasedGame;
  * Created by mrakr_000 on 2014-06-19.
  */
 public class Board extends DraggableContainer{
-    private final DialogBox dialog;
+    private final ForcesCountPrompt dialog;
     private Gameplay gameplay;
     private BoardDrawer boardDrawer;
 
@@ -33,16 +29,13 @@ public class Board extends DraggableContainer{
         setPaddingX(50);
         setPaddingY(50);
         setBackground(new ImageContent(bgImage));
-        dialog = new DialogBox(200, 200);
-        dialog.init(container, game, State.TURN.getCode());
+        dialog = new ForcesCountPrompt(container, game, 200, 200);
     }
 
     public void setup(Gameplay gameplay) {
         this.gameplay = gameplay;
-        Context context = Context.getInstance();
-        TileCalculator calculator = new HexCalculator(context.config().getTileSize());
-        TileDrawer td = new MainTileDrawer(calculator);
-        boardDrawer = new BoardDrawer(calculator, td);
+        TileDrawer td = new MainTileDrawer(gameplay.getCalculator());
+        boardDrawer = new BoardDrawer(gameplay.getCalculator(), td);
         Content bdg = new BoardDrawing(boardDrawer, gameplay.getGameBoard());
         setDrawing(bdg);
     }
@@ -81,8 +74,8 @@ public class Board extends DraggableContainer{
         }
 
         @Override
-        public Integer askForInt(String msg, Integer min, Integer max) {
-            GUIRequest<Integer> request = dialog.startRequest(msg, min, max);
+        public Integer askForForcesCount(Integer min, Integer max) {
+            GUIRequest<Integer> request = dialog.startRequest("Ships to be", "moved", min, max);
             pin(dialog, clickCoordinates.x, clickCoordinates.y);
             try {
                 request.blockUntilFinished();

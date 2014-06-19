@@ -45,6 +45,9 @@ public class Tile{
     }
 
     public boolean isOwned(){ return owner != null; }
+    public boolean isNeutral(){ return owner == null && !forces.isEmpty(); }
+    public boolean isVoid(){ return owner == null && forces.isEmpty(); }
+
     public Player getOwner(){ return owner; }
 
     public int getX() {
@@ -85,4 +88,6 @@ public class Tile{
     public void setY(int y) {
         this.y = y;
     }
+
+    public boolean isPlanet(){ return getTileNo() >= 0; }
 }

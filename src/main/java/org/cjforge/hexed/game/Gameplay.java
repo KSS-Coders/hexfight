@@ -1,5 +1,7 @@
 package org.cjforge.hexed.game;
 
+import org.cjforge.hexed.utils.TileCalculator;
+
 /**
  * Created by mrakr_000 on 2014-06-19.
  */
@@ -7,12 +9,14 @@ public class Gameplay {
     private final GameBoard gameBoard;
     private final BoardController boardController;
     private final Player[] players;
+    private final TileCalculator calculator;
 
     private int currentplayerId;
 
-    public Gameplay(GameBoard gameBoard, BoardController boardController, Player[] players) {
+    public Gameplay(GameBoard gameBoard, Player[] players, TileCalculator calculator) {
         this.gameBoard = gameBoard;
-        this.boardController = boardController;
+        this.calculator = calculator;
+        this.boardController = new BoardController(this);
         this.players = players;
     }
 
@@ -41,5 +45,9 @@ public class Gameplay {
 
     public void nextTurn(){
         currentplayerId = 0;
+    }
+
+    public TileCalculator getCalculator() {
+        return calculator;
     }
 }

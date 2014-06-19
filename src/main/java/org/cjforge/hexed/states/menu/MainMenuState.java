@@ -50,8 +50,8 @@ public class MainMenuState extends BasicGameState {
             e.printStackTrace();
         }
         String buttonText = "Start game";
-        startGame = new TextButton(container, forcedSquared48, buttonText, (container.getWidth() - forcedSquared48.getWidth(buttonText))/2, 300, game, getID());
-        exit = new TextButton(container, forcedSquared48, "Exit", (int) (container.getWidth()*0.9), (int) (container.getHeight()*0.9), game, getID());
+        startGame = new TextButton(container, forcedSquared48, buttonText, (container.getWidth() - forcedSquared48.getWidth(buttonText))/2, 300, game);
+        exit = new TextButton(container, forcedSquared48, "Exit", (int) (container.getWidth()*0.9), (int) (container.getHeight()*0.9), game);
         exit.setEnabled(true);
         startGame.setEnabled(true);
         exit.addAction(new ButtonAction() {
@@ -81,4 +81,15 @@ public class MainMenuState extends BasicGameState {
 
     }
 
+    @Override
+    public void leave(GameContainer container, StateBasedGame game) throws SlickException {
+        exit.setEnabled(false);
+        startGame.setEnabled(false);
+    }
+
+    @Override
+    public void enter(GameContainer container, StateBasedGame game) throws SlickException {
+        exit.setEnabled(true);
+        startGame.setEnabled(true);
+    }
 }

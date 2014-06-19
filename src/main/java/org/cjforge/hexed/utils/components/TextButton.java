@@ -15,16 +15,14 @@ public class TextButton extends MouseOverArea {
     private final Font font;
     private final String text;
     private final StateBasedGame game;
-    private final int stateID;
     private boolean isEnabled;
     private List<ButtonAction> actions;
 
-    public TextButton(GUIContext container, Font font, String text, int x, int y, StateBasedGame game, int stateID) throws SlickException {
+    public TextButton(GUIContext container, Font font, String text, int x, int y, StateBasedGame game) throws SlickException {
         super(container, new Image(0,0), x, y, font.getWidth(text), font.getHeight(text));
         this.font = font;
         this.text = text;
         this.game = game;
-        this.stateID = stateID;
         this.actions = new ArrayList<>();
     }
 
@@ -50,7 +48,7 @@ public class TextButton extends MouseOverArea {
 
     @Override
     public void mouseClicked(int button, int x, int y, int clickCount){
-        if(isMouseOver() && game.getCurrentStateID() == stateID && isEnabled){
+        if(isMouseOver() && isEnabled){
             for(ButtonAction action : actions){
                 action.performAction();
             }

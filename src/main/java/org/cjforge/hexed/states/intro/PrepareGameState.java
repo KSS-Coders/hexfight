@@ -3,8 +3,9 @@ package org.cjforge.hexed.states.intro;
 import org.cjforge.hexed.context.Context;
 import org.cjforge.hexed.game.*;
 import org.cjforge.hexed.states.State;
-import org.cjforge.hexed.states.play.NewPlayState;
 import org.cjforge.hexed.states.play.PlayState;
+import org.cjforge.hexed.utils.HexCalculator;
+import org.cjforge.hexed.utils.TileCalculator;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
@@ -38,12 +39,11 @@ public class PrepareGameState extends BasicGameState{
 //        int playersCount = Context.getInstance().config().getPlayersNumber();
 //        play.setUp(getPlayers(playersCount));
 //        game.enterState(State.TURN.getCode());
-        NewPlayState play = (NewPlayState) game.getState(State.TURN.getCode());
+        PlayState play = (PlayState) game.getState(State.TURN.getCode());
         int playersCount = Context.getInstance().config().getPlayersNumber();
         Player[] players = getPlayers(playersCount);
         GameBoard gameBoard = new BoardFactory().buildSimpleBoard(10,10,players);
-        BoardController boardController = new BoardController(gameBoard);
-        play.setup(new Gameplay(gameBoard, boardController, players));
+        play.setup(new Gameplay(gameBoard, players, new HexCalculator(Context.getInstance().config().getTileSize())));
         game.enterState(State.TURN.getCode());
     }
 

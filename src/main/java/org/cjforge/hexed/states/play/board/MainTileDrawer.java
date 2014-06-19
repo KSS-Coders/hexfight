@@ -72,7 +72,7 @@ public class MainTileDrawer implements TileDrawer {
             tileDrawing.add(OWNED_LAYER);
             p.log("Add owned");
         }
-        if(tile.getTileNo() >= 0){
+        if(tile.isPlanet()){
             tileDrawing.add(locations[tile.getTileNo()]);
             p.log("Add location");
         }

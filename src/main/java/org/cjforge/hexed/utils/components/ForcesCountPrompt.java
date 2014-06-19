@@ -1,21 +1,21 @@
 package org.cjforge.hexed.utils.components;
 
 import org.apache.log4j.Logger;
-import org.cjforge.hexed.utils.Hexagon;
 import org.cjforge.hexed.context.Context;
 import org.cjforge.hexed.states.play.GUIRequest;
+import org.cjforge.hexed.utils.ColorFill;
+import org.cjforge.hexed.utils.Hexagon;
 import org.cjforge.hexed.utils.Profiler;
 import org.newdawn.slick.*;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Shape;
-import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.gui.GUIContext;
 import org.newdawn.slick.state.StateBasedGame;
 
 /**
- * Created by mrakr_000 on 2014-06-02.
+ * Created by mrakr_000 on 2014-06-19.
  */
-public class DialogBox extends SimpleContent {
+public class ForcesCountPrompt extends SimpleContent {
 
     private Logger l = Logger.getLogger(this.getClass());
 
@@ -29,17 +29,14 @@ public class DialogBox extends SimpleContent {
     private TextButton decrement;
 
     private Font font;
-    private String commitTxt = "Commit";
+    private String commitTxt = "Move";
 
     private Integer counter;
 
-    public DialogBox(int width, int height) throws SlickException {
+    public ForcesCountPrompt(GUIContext context, StateBasedGame game, int width, int height) throws SlickException {
         super(width, height);
-    }
-
-    public void init(GUIContext context, StateBasedGame game, int stateId) throws SlickException {
         font = Context.getInstance().resources().getFont("forces-squared", 24);
-        commit = new TextButton(context, font, commitTxt, 0,0, game, stateId);
+        commit = new TextButton(context, font, commitTxt, 0,0, game);
         commit.addAction(new ButtonAction() {
             @Override
             public void performAction() {
@@ -47,14 +44,14 @@ public class DialogBox extends SimpleContent {
                 request.setFinished(true);
             }
         });
-        increment = new TextButton(context, font, "+",0,0, game, stateId);
+        increment = new TextButton(context, font, "+",0,0, game);
         increment.addAction(new ButtonAction() {
             @Override
             public void performAction() {
                 if(counter < max) counter++;
             }
         });
-        decrement = new TextButton(context, font, "-",0,0, game, stateId);
+        decrement = new TextButton(context, font, "-",0,0, game);
         decrement.addAction(new ButtonAction() {
             @Override
             public void performAction() {
@@ -77,17 +74,7 @@ public class DialogBox extends SimpleContent {
         commit.setCenterLocation(x + getCenterX(), (int) (y + 0.8 * getHeight()));
         increment.setCenterLocation((int) (x + getWidth() * 0.9), y + getCenterY());
         decrement.setCenterLocation((int) (x + getWidth() * 0.1), y + getCenterY());
-        g.fill(bg, new ShapeFill() {
-            @Override
-            public Color colorAt(Shape shape, float x, float y) {
-                return new Color(0, 0, 0, (float) 0.8);
-            }
-
-            @Override
-            public Vector2f getOffsetAt(Shape shape, float x, float y) {
-                return new Vector2f(0, 0);
-            }
-        });
+        g.fill(bg, new ColorFill(new Color(0, 0, 0, 0.8f)));
         font.drawString((float) (x - font.getWidth(msg) / 2.0 + getCenterX()), (float) (y + 0.3 * getHeight()), msg);
         font.drawString(x - font.getWidth(counter.toString())/2 + getCenterX(), y + getCenterY(), counter.toString());
         commit.render(container, g);
