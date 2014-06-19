@@ -62,7 +62,13 @@ public class BoardController {
     }
 
     private void attackNeutralTile(Tile from, Tile dest, int forcesCount) {
-
+        int diff = dest.getForces().getStrength() - forcesCount;
+        dest.setForces(new TileForces(diff));
+        if(diff < 0){
+            dest.setForces(new TileForces(-diff));
+            dest.setOwner(from.getOwner());
+        }
+        moveForcesFrom(from, forcesCount);
     }
 
     private void conquerTile(Tile from, Tile dest, int forcesCount) {
