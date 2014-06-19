@@ -1,12 +1,23 @@
 apply plugin: 'java'
 apply plugin: 'idea'
+apply plugin: 'application'
 
 sourceCompatibility = 1.7
-version = '1.0'
+version = '0.0.1'
+
+ext.platform = "windows"
+
+mainClassName = "org.cjforge.hexed.GameCore"
+applicationDefaultJvmArgs = ["-Djava.library.path=../lib/"]
+applicationDistribution.from("${buildDir}/natives/${platform}") {
+    into "lib"
+}
 
 repositories {
     mavenCentral()
 }
+
+
 
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.11'
@@ -16,7 +27,7 @@ dependencies {
     compile 'log4j:log4j:1.2.17'
 }
 
-compileJava.dependsOn "natives"
+//compileJava.dependsOn "natives"
 
 platforms = ['windows', 'linux', 'osx']
 platforms.each { platform ->
@@ -40,3 +51,11 @@ task natives {
     description "Copies native libraries to an appropriate directory."
     dependsOn platforms.collect { "${it}Natives" }.findAll { tasks[it] }
 }
+
+distZip{
+    dependsOn natives
+}
+
+
+
+
