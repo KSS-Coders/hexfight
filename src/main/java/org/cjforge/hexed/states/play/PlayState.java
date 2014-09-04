@@ -49,6 +49,7 @@ public class PlayState extends BasicGameState {
     public void update(final GameContainer container, final StateBasedGame game, int delta) throws SlickException {
         if(hud.update(container, game, delta))
         board.update(container, game, delta);
+        board.setHudWidth(hud.getHudWidth());
         pollInput(container, game, delta);
     }
 

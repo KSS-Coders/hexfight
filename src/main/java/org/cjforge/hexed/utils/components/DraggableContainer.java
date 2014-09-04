@@ -26,9 +26,16 @@ public class DraggableContainer extends PositionedGraphicComponent {
      ===========================================*/
     private int paddingX;
     private int paddingY;
+
+    private int paddingLeft;
+
+    public VisibleFrame getFrame() {
+        return frame;
+    }
+
     /*============================================
-        VISIBLE
-     ===========================================*/
+            VISIBLE
+         ===========================================*/
     private VisibleFrame frame;
     /*============================================
         PINNED CONTENT
@@ -104,7 +111,7 @@ public class DraggableContainer extends PositionedGraphicComponent {
         OFFSET
      ===========================================*/
     public Integer getMinVisibleOffsetX() {
-        return -getPaddingX();
+        return -getPaddingX() - paddingLeft;
     }
 
     public Integer getMinVisibleOffsetY() {
@@ -180,7 +187,16 @@ public class DraggableContainer extends PositionedGraphicComponent {
         if (hasPinned()) pinnedContent.render(context, g, placeOnFrame());
     }
 
-    private class VisibleFrame {
+    public int getPaddingLeft() {
+        return paddingLeft;
+    }
+
+    public void setPaddingLeft(int paddingLeft) {
+        this.paddingLeft = paddingLeft;
+        frame.move(0,0);
+    }
+
+    protected class VisibleFrame {
         private int x;
         private int y;
 
@@ -201,7 +217,7 @@ public class DraggableContainer extends PositionedGraphicComponent {
         }
 
         public void setCenterX(int x) {
-            setX(x - getWidth() / 2);
+            setX(x - (getWidth() - paddingLeft) / 2);
         }
 
         public int getY() {
@@ -235,11 +251,11 @@ public class DraggableContainer extends PositionedGraphicComponent {
         }
 
         private boolean drawingFitsHorizontally() {
-            return getWidth() > drawing.getWidth();
+            return getWidth() - paddingLeft > drawing.getWidth();
         }
 
         private void centerOnDrawingHorizontally() {
-            setCenterX(drawing.getCenterX());
+            setCenterX(drawing.getCenterX() - paddingLeft);
         }
 
         public void moveVertically(int y) {

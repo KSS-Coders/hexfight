@@ -3,6 +3,7 @@ package org.cjforge.hexed.states.play.board;
 import org.apache.log4j.Logger;
 import org.cjforge.hexed.context.Context;
 import org.cjforge.hexed.game.Player;
+import org.cjforge.hexed.game.PlayerColors;
 import org.cjforge.hexed.game.Tile;
 import org.cjforge.hexed.utils.ColorFill;
 import org.cjforge.hexed.utils.Hexagon;
@@ -21,7 +22,6 @@ import java.util.Collection;
  */
 public class MainTileDrawer implements TileDrawer {
 
-    private static final Color[] colors = new Color[]{Color.blue, Color.green, Color.red, Color.yellow, Color.darkGray, Color.cyan};
     private final TileDrawingLayer GRID_LAYER;
     private final TileDrawingLayer ACTIVE_LAYER;
     private final TileDrawingLayer OWNED_LAYER;
@@ -99,7 +99,7 @@ public class MainTileDrawer implements TileDrawer {
     }
 
     private Color playerColor(Player p) {
-        return colors[p.getID()];
+        return PlayerColors.getColorForPlayer(p);
     }
 
     @Override

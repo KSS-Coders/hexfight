@@ -31,4 +31,8 @@ public class Point {
     public Point negative() {
         return new Point(-x, -y);
     }
+
+    public boolean isPositive() {
+        return x >= 0 && y >= 0;
+    }
 }
