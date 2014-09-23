@@ -20,8 +20,6 @@ public class Board extends DraggableContainer {
     private Gameplay gameplay;
     private BoardDrawer boardDrawer;
 
-    private float hudWidth;
-
     public Board(GameContainer container, StateBasedGame game) throws SlickException {
         super(0, 0, 0, 0);
         Context context = Context.getInstance();
@@ -51,7 +49,7 @@ public class Board extends DraggableContainer {
         if (!hasPinned() && button == Input.MOUSE_LEFT_BUTTON) {
             final Point p = getAbsoluteCooridnates(mx, my);
             final Point p1 = boardDrawer.getBoardCooridnates(p.x, p.y);
-            if(p1.isPositive()) {
+            if(p1.isNonNegative()) {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
@@ -69,12 +67,8 @@ public class Board extends DraggableContainer {
     }
 
     public void setHudWidth(float hudWidth) {
-        this.hudWidth = hudWidth;
         setPaddingLeft((int) hudWidth);
     }
-
-
-
 
     private class BoardGUICallback implements GUICallback {
 

@@ -28,11 +28,11 @@ public class Point {
         return new Point(x + toAdd.x, y + toAdd.y);
     }
 
-    public Point negative() {
+    public Point negate() {
         return new Point(-x, -y);
     }
 
-    public boolean isPositive() {
+    public boolean isNonNegative() {
         return x >= 0 && y >= 0;
     }
 }

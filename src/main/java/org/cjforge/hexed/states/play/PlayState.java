@@ -17,7 +17,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 /**
- * Created by mrakr_000 on 2014-06-19.
+ * The main state of the game. This state implements all of actual gameplay.
  */
 public class PlayState extends BasicGameState {
 
@@ -25,8 +25,6 @@ public class PlayState extends BasicGameState {
 
     private Board board;
     private Hud hud;
-
-    private Gameplay gameplay;
 
     @Override
     public int getID() {
@@ -53,6 +51,15 @@ public class PlayState extends BasicGameState {
         pollInput(container, game, delta);
     }
 
+
+    /**
+     * Check container input. This method will check input and perform actions appropriate for whole of the state
+     * (like entering Mein Menu on ESC.
+     *
+     * @param container Game container
+     * @param game  Current game
+     * @param delta Time delta
+     */
     private void pollInput(GameContainer container, StateBasedGame game, int delta) {
         Input input = container.getInput();
         if (input.isKeyDown(Input.KEY_S)) {
@@ -93,8 +100,13 @@ public class PlayState extends BasicGameState {
         return screenShot;
     }
 
+    /**
+     * This method allows game setup after creation and initialization of state. It is necessary for dynamic game
+     * configuration
+     *
+     * @param gameplay Gameplay configuration.
+     */
     public void setup(Gameplay gameplay) {
-        this.gameplay = gameplay;
         board.setup(gameplay);
         hud.setup(gameplay);
     }

@@ -10,7 +10,7 @@ import org.newdawn.slick.state.transition.EmptyTransition;
 import org.newdawn.slick.state.transition.FadeInTransition;
 
 /**
- * Created by mrakr_000 on 2014-05-12.
+ * The entry state of the game. It is necessary for GameIntroState to start with fade transition.
  */
 public class KickState extends BasicGameState {
     @Override

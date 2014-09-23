@@ -15,7 +15,9 @@ import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
 /**
- * Created by mrakr_000 on 2014-05-12.
+ * The state to set up game configuration. Right now the configuration is hardcoded and cannot be
+ * changed non-programatically. the only action of this game is to prepare board and gameplay objects
+ * and pass it to PlayState.
  */
 public class PrepareGameState extends BasicGameState {
     public PrepareGameState() {

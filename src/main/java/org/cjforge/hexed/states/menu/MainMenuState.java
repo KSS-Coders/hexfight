@@ -9,16 +9,9 @@ import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
 /**
- * Created by mrakr_000 on 2014-05-10.
+ * Main Menu of the game.
  */
 public class MainMenuState extends BasicGameState {
-    /**
-     * Create a new basic game
-     *
-     * @param title The title for the game
-     */
-
-    private Font cubic64b;
     private Font forcedSquared48;
     private TextButton startGame;
     private TextButton exit;
@@ -39,7 +32,6 @@ public class MainMenuState extends BasicGameState {
     @Override
     public void init(final GameContainer container, final StateBasedGame game) throws SlickException {
         try {
-            cubic64b = context.resources().getFont("cubic", 64, "b");
             forcedSquared48 = context.resources().getFont("forces-squared", 48);
             bg = context.resources().getImage("menu-bg");
             logo = context.resources().getImage("logo");

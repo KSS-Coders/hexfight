@@ -1,5 +1,6 @@
-package org.cjforge.hexed;
+package org.cjforge.hexed.states;
 
+import javax.xml.parsers.ParserConfigurationException;
 import org.apache.log4j.BasicConfigurator;
 import org.cjforge.hexed.context.Context;
 import org.cjforge.hexed.states.intro.GameIntroState;
@@ -7,37 +8,35 @@ import org.cjforge.hexed.states.intro.KickState;
 import org.cjforge.hexed.states.intro.PrepareGameState;
 import org.cjforge.hexed.states.menu.MainMenuState;
 import org.cjforge.hexed.states.play.PlayState;
-import org.newdawn.slick.AppGameContainer;
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.SlickException;
+import org.newdawn.slick.*;
+import org.newdawn.slick.state.GameState;
 import org.newdawn.slick.state.StateBasedGame;
+import org.newdawn.slick.util.InputAdapter;
 import org.xml.sax.SAXException;
 
-import javax.xml.parsers.ParserConfigurationException;
 import java.awt.*;
 import java.io.IOException;
 
 /**
- * The main class of the application. Here AppGameContainer is created, and all states added to game. Also all necessary
- * configuration is performed.
+ * Created by mrakr_000 on 2014-09-07.
  */
-public class GameCore extends StateBasedGame {
-
-    public static final String GAME_TITLE = "Hexed";
+public class TestGame extends StateBasedGame {
 
     private Context context;
+    private GameState[] states;
 
-    public GameCore(String title) {
+    private TestGame(String title, GameState[] states) {
         super(title);
+        this.states = states;
         context = Context.getInstance();
     }
 
-    public static void main(String args[]) throws SlickException {
+    public static void startGame(String title, GameState[] states) throws SlickException {
         BasicConfigurator.configure();
         GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
         int width = gd.getDisplayMode().getWidth();
         int height = gd.getDisplayMode().getHeight();
-        AppGameContainer app = new AppGameContainer(new GameCore(GAME_TITLE));
+        AppGameContainer app = new AppGameContainer(new TestGame(title, states));
         app.setDisplayMode(width, height, true);
         app.setShowFPS(false);
         app.setTargetFrameRate(60);
@@ -46,6 +45,14 @@ public class GameCore extends StateBasedGame {
     }
 
     public void initGame(GameContainer container) throws SlickException {
+        container.getInput().addKeyListener(new InputAdapter() {
+            @Override
+            public void keyReleased(int key, char c) {
+                if(key == Input.KEY_ESCAPE) {
+                    System.exit(0);
+                }
+            }
+        });
         container.setFullscreen(true);
         try {
             context.init(container);
@@ -57,11 +64,8 @@ public class GameCore extends StateBasedGame {
     @Override
     public void initStatesList(GameContainer container) throws SlickException {
         initGame(container);
-        addState(new KickState());
-        addState(new GameIntroState());
-        addState(new MainMenuState());
-        addState(new PrepareGameState());
-        addState(new PlayState());
+        for(GameState state : states) {
+            addState(state);
+        }
     }
-
 }

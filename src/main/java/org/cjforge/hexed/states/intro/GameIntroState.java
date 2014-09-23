@@ -9,7 +9,8 @@ import org.newdawn.slick.state.transition.EmptyTransition;
 import org.newdawn.slick.state.transition.FadeOutTransition;
 
 /**
- * Created by mrakr_000 on 2014-05-12.
+ * Intro state with game logo and message displayed on the screen. It also implements key listener so on any key pressed
+ * it will change to MainMenuState. Transition will also occur after 5s timeout.
  */
 public class GameIntroState extends BasicGameState {
 

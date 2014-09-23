@@ -15,6 +15,7 @@ import org.newdawn.slick.*;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Font;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Image;
 import org.newdawn.slick.geom.*;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.state.StateBasedGame;
@@ -34,6 +35,7 @@ public class Hud {
     private TextButton nextTurn;
     private Player currentPlayer;
     private Shape hudBackground;
+    private Image boardBackground;
 
     private Font playerFont;
 
@@ -44,12 +46,14 @@ public class Hud {
         Dimension screenResolution = Context.getInstance().config().getScreenResolution();
         playerColors = new HashMap<>();
         playerFont = Context.getInstance().resources().getFont("forces-squared", 32);
+        boardBackground = Context.getInstance().resources().getImage("theme-bg").getSubImage(0,0, (int) (getHudWidth()), screenResolution.height).copy();
 //        hudBackground = new Rectangle(0,0,screenResolution.width * 0.2f, screenResolution.height );
         hudBackground = new Hexagon(screenResolution.height, (int) (-screenResolution.height + getHudWidth()), 0);
         nextTurn = new TextButton(container, font, "end turn", (int) (container.getWidth() * 0.02), (int) (container.getHeight() * 0.7), game);
     }
 
     public void render(GameContainer container, StateBasedGame game, Graphics g) {
+//        g.drawImage(boardBackground,0,0);
         g.fill(hudBackground, getCurrentPlayerColor());
 //        playerFont.drawString((int) (container.getWidth() * 0.02), (int) (container.getHeight() * 0.3), "Player : " + currentPlayer.getID(), Color.black);
 
